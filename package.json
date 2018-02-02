@@ -1,0 +1,12 @@
+{
+    "name": "flexio-jsrouter",
+    "version": "1.0.0",
+    "description": "Simple service router for hotballoon application",
+    "module": "index.es.js",
+    "repository": "git@github.com:flexiooss/flexio-jsrouter.git",
+    "author": "Thomas Chatelain (https://github.com/TomAchT)",
+    "license": "Apache-2.0",
+    "dependencies": {
+        "flexio-jshelpers": "https://github.com/flexiooss/flexio-jshelpers.git"
+    }
+}
