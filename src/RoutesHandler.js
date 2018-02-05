@@ -7,8 +7,22 @@ import {
 /**
  *
  * @class RoutesHandler
+ * @description RouteHandler can work with routes Object scheme :
+ *
+ * {
+ *    myRoute: {
+ *      path: '^/page/([\\-_\\w]*)/?([\\d]*)?/?$',
+ *      customProp1: 'customProp1Value',
+ *      customProp2: 'customProp2Value',
+ *      ...
+ *      },
+ *    ...
+ * }
+ *
+ *
  *
  */
+
 class RoutesHandler {
   constructor() {
     this._routes = new MapExtended()

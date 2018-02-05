@@ -4,33 +4,35 @@ import {
 import {
   PathParser
 } from './PathParser'
+import {
+  HashParser
+} from './HashParser'
+import {
+  QueryParser
+} from './QueryParser'
 
+/**
+ *
+ * @class RouterService
+ *
+ */
 class RouterService {
   constructor() {
     this._routesHandler = new RoutesHandler()
-    this._parser = new PathParser()
     this._location = window.location
+    this._PathParser = PathParser
+    this._HashParser = HashParser
+    this._QueryParser = QueryParser
   }
-  searchQueryParam(param) {
-    var vars = {}
-    window.location.href.replace(window.location.hash, '').replace(
-      /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
-      function(m, key, value) { // callback
-        vars[key] = value !== undefined ? value : ''
-      }
-    )
 
-    if (param) {
-      return vars[param] ? vars[param] : null
-    }
-    return vars
-  }
   setRoute() {
     this._location = window.location
   }
+
   hash() {
     return this._location.hash.substr(1)
   }
+
   path() {
     return this._location.pathname
     // return this._location.pathname.substr(1)
@@ -48,18 +50,14 @@ class RouterService {
     return this._routesHandler.forEachRoutes(callback)
   }
 
-  routeUrl(routeName, params, queryParams, hash) {
-    const path = this.route(routeName).path
-    return this._parser.pathToUrl(path, params)
+  urlByRouteName(routeName, params, queryParams, hash) {
+    return new this._PathParser(this.route(routeName).path).regexToSring(params)
   }
 
-  getRouteByPath() {
-    console.log('getRouteByPath')
-    console.log(this.path())
-
+  routeObjectByPath() {
     var route = {}
     this._routesHandler.forEachRoutes((value, key, map) => {
-      var matches = this._parser.parsePath(this.path(), value.path)
+      let matches = new this._PathParser(this.path()).parsePath(value.path)
       if (matches) {
         route = this.route(key)
         if (matches.length > 1) {
@@ -70,7 +68,6 @@ class RouterService {
         }
       }
     })
-    console.log(route)
     return route
   }
 }
