@@ -1,5 +1,5 @@
 import {
-  should,
+  assert,
   isObject,
   MapExtended
 } from 'flexio-jshelpers'
@@ -31,9 +31,9 @@ class RoutesHandler {
   }
 
   setRoutes(routes) {
-    should(
+    assert(
       isObject(routes),
-      'flexio-jsrouter:RoutesHandler:setRoutes: `routes` argument should be an instance of Object, %s given',
+      'flexio-jsrouter:RoutesHandler:setRoutes: `routes` argument assert be an instance of Object, %s given',
       typeof routes
     )
     for (let name in routes) {
@@ -42,9 +42,9 @@ class RoutesHandler {
   }
 
   addRoute(name, route) {
-    should(
+    assert(
       'path' in route,
-      'flexio-jsrouter:RoutesHandler:setRoutes: `route item` should be have a `path` entry with a String Regexp'
+      'flexio-jsrouter:RoutesHandler:setRoutes: `route item` assert be have a `path` entry with a String Regexp'
     )
     this._routes.set(name, route)
   }

@@ -1,5 +1,5 @@
 // import {
-//   should,
+//   assert,
 //   isString
 // } from 'flexio-jshelpers'
 

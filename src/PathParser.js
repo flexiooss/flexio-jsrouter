@@ -1,5 +1,5 @@
 import {
-  should,
+  assert,
   isString
 } from 'flexio-jshelpers'
 
@@ -20,8 +20,8 @@ const REGEX_URL_REGEX = '[\\/\\d\\w[\\]\\(\\)\\*?\\-_:\\\\]*'
 
 class PathParser {
   constructor(path) {
-    should(isString(path),
-      'PathParser:constructor: `path` argument should be a String, `%s` given',
+    assert(isString(path),
+      'PathParser:constructor: `path` argument assert be a String, `%s` given',
       typeof path
     )
 
@@ -67,7 +67,7 @@ class PathParser {
         } else if (!matches[2] && p) {
           route = route.replace(matches[1], this._checkParam(p, matches[1]))
         } else {
-          should(!!(matches[2] && p),
+          assert(!!(matches[2] && p),
             'PathParser:pathToUrl: this route `%s` have required param(s)',
             this.path
           )
@@ -83,7 +83,7 @@ class PathParser {
   _checkParam(param, regex) {
     regex = regex.replace(new RegExp('^(\\(?)(' + REGEX_URL_FRAGMENT + ')(\\)?)$'), '$2')
 
-    should(!!(new RegExp('^' + regex + '$', 'ig').test(param)),
+    assert(!!(new RegExp('^' + regex + '$', 'ig').test(param)),
       'PathParser:_checkParam: ̀ argument : `%s` not match with `regex` argument : `%s`',
       param,
       regex
