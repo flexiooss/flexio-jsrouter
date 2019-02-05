@@ -23,10 +23,15 @@ class Router {
    */
   constructor(routesHandler) {
     this._routesHandler = routesHandler
+    /**
+     *
+     * @type {?BrowserLocation}
+     * @private
+     */
     this._browserLocation = null
     this._PathParser = PathParser
-    this._HashParser = HashParser
-    this._QueryParser = QueryParser
+    // this._HashParser = HashParser
+    // this._QueryParser = QueryParser
   }
 
   /**
@@ -49,27 +54,41 @@ class Router {
     return this
   }
 
+  /**
+   *
+   * @param {BrowserLocation} browserLocation
+   * @return {Router}
+   */
   withBrowserLocation(browserLocation) {
     this._browserLocation = browserLocation
     return this
   }
 
+  /**
+   *
+   * @param key
+   * @return {Route}
+   */
   route(key) {
     return this._routesHandler.route(key)
   }
 
-  forEachRoutes(callback) {
-    return this._routesHandler.forEachRoutes(callback)
+  /**
+   *
+   * @param {string} name
+   * @param params
+   * @param queryParams
+   * @param hash
+   * @return {string}
+   */
+  pathByRouteName(name, params, queryParams, hash) {
+    return new this._PathParser(this.route(name).path).regexToSring(params)
   }
 
-  urlByRouteName(routeName, params, queryParams, hash) {
-    return new this._PathParser(this.route(routeName).path).regexToSring(params)
-  }
-
-  routeByPath() {
+  routeByPath(path) {
     var route = {}
     this._routesHandler.forEachRoutes((value, key, map) => {
-      let matches = new this._PathParser(this.path()).parsePath(value.path)
+      let matches = new this._PathParser(path).parsePath(value.path)
       if (matches) {
         route = this.route(key)
         if (matches.length > 1) {

@@ -5,6 +5,12 @@ import {
 
 const REGEX_URL_FRAGMENT = '[\\d\\w[\\]\\*?\\-_\\\\]*'
 const REGEX_URL_REGEX = '[\\/\\d\\w[\\]\\(\\)\\*?\\-_:\\\\]*'
+/**
+ *
+ * @type {Map<string, RegExp>}
+ * @private
+ */
+const __memoize_regexp = new Map()
 
 /**
  *
@@ -17,7 +23,6 @@ const REGEX_URL_REGEX = '[\\/\\d\\w[\\]\\(\\)\\*?\\-_:\\\\]*'
  *
  *
  */
-
 class PathParser {
   constructor(path) {
     assert(isString(path),
@@ -34,16 +39,27 @@ class PathParser {
   }
 
   /**
-     *
-     * @param {*} regexpPath
-     */
+   *
+   * @param {*} regexpPath
+   */
   parsePath(regexpPath) {
-    const re = new RegExp(regexpPath, 'gi')
+    const re = this.__getCompiledRegexp(regexpPath)
     if (re.test(this.path)) {
       re.lastIndex = 0
       return re.exec(this.path)
     }
     return false
+  }
+
+  __getCompiledRegexp(regexp) {
+    if (!__memoize_regexp.has(regexp)) {
+      __memoize_regexp.set(
+        regexp,
+        new RegExp(regexp, 'gi')
+      )
+    }
+
+    return __memoize_regexp.get(regexp)
   }
 
   regexToSring(params) {
