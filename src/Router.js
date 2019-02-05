@@ -92,27 +92,31 @@ class Router {
 
   /**
    *
-   * @param {string} path
+   * @param path
+   * @return {{route: ?Route, params: ?array<*>}}
    */
   routeByPath(path) {
     var route = null
+    var params = null
     let isRouteFound = false
-    this._routesHandler.forEachRoutes((value, key, map) => {
+    this._routesHandler.forEachRoutes((r, key, map) => {
       if (!isRouteFound) {
-        let matches = new this._PathParser(path).parsePath(value.path)
-        if (matches) {
+        let matches = new this._PathParser(path).parsePath(r.regexp)
+        if (matches !== null) {
           isRouteFound = true
-          route = this.route(key)
-          if (matches.length > 1) {
-            route.param = {}
-            for (let i = 1; i < matches.length; i++) {
-              route.param[i] = matches[i]
-            }
-          }
+          route = r
+          params = matches.groups
         }
       }
     })
-    return route
+    return {route, params}
+  }
+
+  findRouteInvoke(path) {
+    const {route, params} = this.routeByPath(path)
+    if (route !== null) {
+      route.callback(params)
+    }
   }
 }
 
