@@ -1,15 +1,21 @@
 {
-    "name": "flexio-jsrouter",
-    "version": "1.0.0",
-    "description": "Simple service router for hotballoon application",
-    "module": "index.es.js",
-    "repository": "git@github.com:flexiooss/flexio-jsrouter.git",
-    "author": "Thomas Chatelain (https://github.com/TomAchT)",
-    "license": "Apache-2.0",
-    "dependencies": {
-        "flexio-jshelpers": "https://github.com/flexiooss/flexio-jshelpers.git"
-    },
-    "devDependencies": {
-        "eslint": "^4.18.2"
-    }
+  "name": "flexio-jsrouter",
+  "version": "1.0.0",
+  "description": "Simple service router for hotballoon application",
+  "module": "index.es.js",
+  "repository": "git@github.com:flexiooss/flexio-jsrouter.git",
+  "author": "Thomas Chatelain (https://github.com/TomAchT)",
+  "license": "Apache-2.0",
+  "scripts": {
+    "hotballoon-shed": "node ./node_modules/hotballoon-shed",
+    "test": "yarn hotballoon-shed --test"
+  },
+  "dependencies": {
+    "flexio-jshelpers": "https://github.com/flexiooss/flexio-jshelpers.git"
+  },
+  "devDependencies": {
+    "code-altimeter-js": "https://github.com/flexiooss/code-altimeter-js.git",
+    "eslint": "^4.18.2",
+    "hotballoon-shed": "https://github.com/flexiooss/hotballoon-shed.git"
+  }
 }

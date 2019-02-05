@@ -1,4 +1,4 @@
 export {
-  RouterService
+  Router
 }
-  from './src/RouterService'
+  from './src/Router'

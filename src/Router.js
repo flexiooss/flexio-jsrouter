@@ -13,33 +13,45 @@ import {
 
 /**
  *
- * @class RouterService
+ * @class Router
  *
  */
-class RouterService {
-  constructor() {
-    this._routesHandler = new RoutesHandler()
-    this._location = window.location
+class Router {
+  /**
+   *
+   * @param {RoutesHandler} routesHandler
+   */
+  constructor(routesHandler) {
+    this._routesHandler = routesHandler
+    this._browserLocation = null
     this._PathParser = PathParser
     this._HashParser = HashParser
     this._QueryParser = QueryParser
   }
 
-  setRoute() {
-    this._location = window.location
+  /**
+   *
+   * @param {Route} route
+   * @return {Router}
+   */
+  addRoute(route) {
+    this._routesHandler.addRoute(route)
+    return this
   }
 
-  hash() {
-    return this._location.hash.substr(1)
+  /**
+   *
+   * @param {string} name
+   * @return {Router}
+   */
+  removeRoute(name) {
+    this._routesHandler.removeRoute(name)
+    return this
   }
 
-  path() {
-    return this._location.pathname
-    // return this._location.pathname.substr(1)
-  }
-
-  setRoutes(routes) {
-    this._routesHandler.setRoutes(routes)
+  withBrowserLocation(browserLocation) {
+    this._browserLocation = browserLocation
+    return this
   }
 
   route(key) {
@@ -54,7 +66,7 @@ class RouterService {
     return new this._PathParser(this.route(routeName).path).regexToSring(params)
   }
 
-  routeObjectByPath() {
+  routeByPath() {
     var route = {}
     this._routesHandler.forEachRoutes((value, key, map) => {
       let matches = new this._PathParser(this.path()).parsePath(value.path)
@@ -71,6 +83,7 @@ class RouterService {
     return route
   }
 }
+
 export {
-  RouterService
+  Router
 }
