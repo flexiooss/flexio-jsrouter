@@ -3,60 +3,71 @@ import {
   isObject,
   MapExtended
 } from 'flexio-jshelpers'
+import {Route} from './Route'
+
+const __routes = Symbol('__routes')
 
 /**
  *
  * @class RoutesHandler
- * @description RouteHandler can work with routes Object scheme :
- *
- * {
- *    myRoute: {
- *      path: '^/page/([\\-_\\w]*)/?([\\d]*)?/?$',
- *      customProp1: 'customProp1Value',
- *      customProp2: 'customProp2Value',
- *      ...
- *      },
- *    ...
- * }
- *
- *
- *
  */
-
-class RoutesHandler {
+export class RoutesHandler {
   constructor() {
-    this._routes = new MapExtended()
-    this._prevRoute = null
-    this._currentRoute = null
+    /**
+     *
+     * @type {Map<string, Route>}
+     * @private
+     */
+    this['_routes'] = new Map()
   }
 
-  setRoutes(routes) {
+  /**
+   *
+   * @param {Route} route
+   * @return {RoutesHandler}
+   */
+  addRoute(route) {
+    assert(route instanceof Route,
+      'flexio-jsrouter:RoutesHandler:addRoute : `route` argument should be an instance of Route')
+
     assert(
-      isObject(routes),
-      'flexio-jsrouter:RoutesHandler:setRoutes: `routes` argument assert be an instance of Object, %s given',
-      typeof routes
+      !this._routes.has(route.name),
+      'flexio-jsrouter:RoutesHandler:addRoute: route name `%s`  already exists',
+      route.name
     )
-    for (let name in routes) {
-      this.addRoute(name, routes[name])
-    }
+    this['_routes'].set(route.name, route)
+    return this
   }
 
-  addRoute(name, route) {
-    assert(
-      'path' in route,
-      'flexio-jsrouter:RoutesHandler:setRoutes: `route item` assert be have a `path` entry with a String Regexp'
-    )
-    this._routes.set(name, route)
+  /**
+   *
+   * @param {string} name
+   * @return {RoutesHandler}
+   */
+  removeRoute(name) {
+    this['_routes'].delete(name)
+    return this
   }
 
-  route(key) {
-    return this._routes.get(key)
+  /**
+   *
+   * @param {string} name
+   * @return {boolean}
+   */
+  hasRoute(name) {
+    return this['_routes'].has(name)
+  }
+
+  /**
+   *
+   * @param {string} name
+   * @return {Route}
+   */
+  route(name) {
+    return this['_routes'].get(name)
   }
 
   forEachRoutes(callback) {
-    return this._routes.forEach(callback)
+    return this['_routes'].forEach(callback)
   }
-}
-export {
-  RoutesHandler
 }
