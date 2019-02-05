@@ -14,7 +14,7 @@ export class RoutesHandler {
      * @type {Map<string, Route>}
      * @private
      */
-    this[_routes] = new Map()
+    this[__routes] = new Map()
   }
 
   /**
