@@ -1,8 +1,4 @@
-import {
-  assert,
-  isObject,
-  MapExtended
-} from 'flexio-jshelpers'
+import {assert} from 'flexio-jshelpers'
 import {Route} from './Route'
 
 const __routes = Symbol('__routes')
@@ -18,7 +14,7 @@ export class RoutesHandler {
      * @type {Map<string, Route>}
      * @private
      */
-    this['_routes'] = new Map()
+    this[_routes] = new Map()
   }
 
   /**
@@ -31,11 +27,11 @@ export class RoutesHandler {
       'flexio-jsrouter:RoutesHandler:addRoute : `route` argument should be an instance of Route')
 
     assert(
-      !this._routes.has(route.name),
+      !this[__routes].has(route.name),
       'flexio-jsrouter:RoutesHandler:addRoute: route name `%s`  already exists',
       route.name
     )
-    this['_routes'].set(route.name, route)
+    this[__routes].set(route.name, route)
     return this
   }
 
@@ -45,7 +41,7 @@ export class RoutesHandler {
    * @return {RoutesHandler}
    */
   removeRoute(name) {
-    this['_routes'].delete(name)
+    this[__routes].delete(name)
     return this
   }
 
@@ -55,7 +51,7 @@ export class RoutesHandler {
    * @return {boolean}
    */
   hasRoute(name) {
-    return this['_routes'].has(name)
+    return this[__routes].has(name)
   }
 
   /**
@@ -64,10 +60,21 @@ export class RoutesHandler {
    * @return {Route}
    */
   route(name) {
-    return this['_routes'].get(name)
+    return this[__routes].get(name)
   }
 
+  /**
+   *
+   * @param {RoutesHandler~MapCallback} callback
+   */
   forEachRoutes(callback) {
-    return this['_routes'].forEach(callback)
+    this[__routes].forEach(callback)
   }
+
+  /**
+   * @callback RoutesHandler~MapCallback
+   * @param {Route} route
+   * @param {string} nameL
+   * @param {Map<string, Route>} routes
+   */
 }
