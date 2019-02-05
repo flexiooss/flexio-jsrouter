@@ -1,4 +1,1 @@
-export {
-  Router
-}
-  from './src/Router'
+export {RouterBuilder} from './src/RouterBuilder'

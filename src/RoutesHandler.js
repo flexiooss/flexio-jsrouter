@@ -4,7 +4,7 @@ import {Route} from './Route'
 const __routes = Symbol('__routes')
 
 /**
- *
+ * @implements {RoutesHandlerInterface}
  * @class RoutesHandler
  */
 export class RoutesHandler {

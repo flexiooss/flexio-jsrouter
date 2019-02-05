@@ -10,7 +10,7 @@ const REGEX_URL_REGEX = '[\\/\\d\\w[\\]\\(\\)\\*?\\-_:\\\\]*'
  * @type {Map<string, RegExp>}
  * @private
  */
-const __memoize_regexp = new Map()
+const __memoizeRegexp = new Map()
 
 /**
  *
@@ -52,27 +52,30 @@ class PathParser {
   }
 
   __getCompiledRegexp(regexp) {
-    if (!__memoize_regexp.has(regexp)) {
-      __memoize_regexp.set(
+    if (!__memoizeRegexp.has(regexp)) {
+      __memoizeRegexp.set(
         regexp,
         new RegExp(regexp, 'gi')
       )
     }
 
-    return __memoize_regexp.get(regexp)
+    return __memoizeRegexp.get(regexp)
   }
 
-  regexToSring(params) {
-    params = params || []
-
-    var route = this.path.replace(new RegExp('^(\\^?)(' + REGEX_URL_REGEX + ')(\\$?)$'), '$2')
+  /**
+   *
+   * @param params
+   * @return {URL}
+   */
+  regexToUrl(params = []) {
+    let route = this.path.replace(new RegExp('^(\\^?)(' + REGEX_URL_REGEX + ')(\\$?)$'), '$2')
 
     const extractGroupRegex = new RegExp('(?:(\\(' + REGEX_URL_FRAGMENT + '\\))(\\??|\\*?))', 'i')
 
     if (extractGroupRegex.test(route)) {
       extractGroupRegex.lastIndex = 0
 
-      var matches = extractGroupRegex.exec(route)
+      let matches = extractGroupRegex.exec(route)
       while (matches && matches.length) {
         let p = params.shift()
 

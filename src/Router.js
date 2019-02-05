@@ -1,9 +1,6 @@
-import {
-  RoutesHandler
-} from './RoutesHandler'
-import {
-  PathParser
-} from './PathParser'
+import {RoutesHandler} from './RoutesHandler'
+import {PathParser} from './PathParser'
+import {PublicRoutesHandler} from './PublicRoutesHandler'
 import {
   HashParser
 } from './HashParser'
@@ -19,7 +16,7 @@ import {
 class Router {
   /**
    *
-   * @param {RoutesHandler} routesHandler
+   * @param {RoutesHandlerInterface} routesHandler
    */
   constructor(routesHandler) {
     this._routesHandler = routesHandler
@@ -32,6 +29,14 @@ class Router {
     this._PathParser = PathParser
     // this._HashParser = HashParser
     // this._QueryParser = QueryParser
+  }
+
+  /**
+   *
+   * @return {PublicRoutesHandler}
+   */
+  routeHandler() {
+    return new PublicRoutesHandler(this)
   }
 
   /**
@@ -82,19 +87,27 @@ class Router {
    * @return {string}
    */
   pathByRouteName(name, params, queryParams, hash) {
-    return new this._PathParser(this.route(name).path).regexToSring(params)
+    return new this._PathParser(this.route(name).path).regexToUrl(params)
   }
 
+  /**
+   *
+   * @param {string} path
+   */
   routeByPath(path) {
-    var route = {}
+    var route = null
+    let isRouteFound = false
     this._routesHandler.forEachRoutes((value, key, map) => {
-      let matches = new this._PathParser(path).parsePath(value.path)
-      if (matches) {
-        route = this.route(key)
-        if (matches.length > 1) {
-          route.param = {}
-          for (let i = 1; i < matches.length; i++) {
-            route.param[i] = matches[i]
+      if (!isRouteFound) {
+        let matches = new this._PathParser(path).parsePath(value.path)
+        if (matches) {
+          isRouteFound = true
+          route = this.route(key)
+          if (matches.length > 1) {
+            route.param = {}
+            for (let i = 1; i < matches.length; i++) {
+              route.param[i] = matches[i]
+            }
           }
         }
       }
