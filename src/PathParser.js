@@ -40,7 +40,8 @@ class PathParser {
 
   /**
    *
-   * @param {*RegExpMatchArray} regexpPath
+   * @param {string} regexpPath
+   * @return {?RegExpMatchArray}
    */
   parsePath(regexpPath) {
     const re = this.__getCompiledRegexp(regexpPath)

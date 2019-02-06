@@ -12,6 +12,7 @@ export class RoutesHandler {
     /**
      *
      * @type {Map<string, Route>}
+     * @property
      * @private
      */
     this[__routes] = new Map()
@@ -72,9 +73,28 @@ export class RoutesHandler {
   }
 
   /**
+   *
+   * @param {RoutesHandler~MapCallback} callback
+   * @return {boolean}
+   */
+  forRoutes(callback) {
+    const entries = this[__routes].entries()
+    /**
+     * @type {array<string, Route>} item
+     */
+    for (const item of entries) {
+      if (callback(item[1], item[0], this[__routes])) {
+        return true
+      }
+    }
+    return false
+  }
+
+  /**
    * @callback RoutesHandler~MapCallback
    * @param {Route} route
    * @param {string} nameL
    * @param {Map<string, Route>} routes
+   * @return {boolean}
    */
 }

@@ -7,6 +7,7 @@ import {
 import {
   QueryParser
 } from './QueryParser'
+import {NotFoundException} from '../NotFoundException'
 
 /**
  *
@@ -92,28 +93,34 @@ class Router {
 
   /**
    *
-   * @param path
-   * @return {{route: ?Route, params: ?array<*>}}
+   * @param {string} url
+   * @return {{route: ?Route, params: ?Object}}
    */
-  routeByPath(path) {
+  routeByUrl(url) {
     var route = null
     var params = null
-    let isRouteFound = false
-    this._routesHandler.forEachRoutes((r, key, map) => {
-      if (!isRouteFound) {
-        let matches = new this._PathParser(path).parsePath(r.regexp)
-        if (matches !== null) {
-          isRouteFound = true
-          route = r
-          params = matches.groups
-        }
+    const isFound = this._routesHandler.forRoutes((r, key, map) => {
+      let matches = new this._PathParser(url)
+        .parsePath(r.regexp)
+      if (matches !== null) {
+        route = r
+        params = matches.groups
+        return true
       }
+      return false
     })
+    if (!isFound) {
+      throw new NotFoundException(url, 'Url not found')
+    }
     return {route, params}
   }
 
-  findRouteInvoke(path) {
-    const {route, params} = this.routeByPath(path)
+  /**
+   *
+   * @param {string} url
+   */
+  callBackRoute(url) {
+    const {route, params} = this.routeByUrl(url)
     if (route !== null) {
       route.callback(params)
     }

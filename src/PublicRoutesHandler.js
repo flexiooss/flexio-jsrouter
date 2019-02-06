@@ -28,4 +28,13 @@ export class PublicRoutesHandler {
     this[__router].removeRoute(name)
     return this
   }
+
+  /**
+   *
+   * @param {string} name
+   * @param {URL} url
+   */
+  url(name, url) {
+
+  }
 }
