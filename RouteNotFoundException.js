@@ -1,11 +1,11 @@
-export class NotFoundException extends Error {
+export class RouteNotFoundException extends Error {
   constructor(url, ...params) {
     super(...params)
 
     if (Error.captureStackTrace) {
       Error.captureStackTrace(
         this,
-        NotFoundException
+        RouteNotFoundException
       )
     }
 

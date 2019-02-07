@@ -1,20 +1,21 @@
 import {RoutesHandler} from './RoutesHandler'
 import {PathParser} from './PathParser'
 import {PublicRoutesHandler} from './PublicRoutesHandler'
+import {RouteWithParams} from './RouteWithParams'
 import {
   HashParser
 } from './HashParser'
 import {
   QueryParser
 } from './QueryParser'
-import {NotFoundException} from '../NotFoundException'
+import {RouteNotFoundException} from '../RouteNotFoundException'
 
 /**
  *
  * @class Router
  *
  */
-class Router {
+export class Router {
   /**
    *
    * @param {RoutesHandlerInterface} routesHandler
@@ -87,21 +88,20 @@ class Router {
    * @param hash
    * @return {string}
    */
-  pathByRouteName(name, params, queryParams, hash) {
+  urlByRouteName(name, params, queryParams, hash) {
     return new this._PathParser(this.route(name).path).regexToUrl(params)
   }
 
   /**
    *
    * @param {string} url
-   * @return {{route: ?Route, params: ?Object}}
+   * @return {RouteWithParams}
    */
   routeByUrl(url) {
     var route = null
     var params = null
     const isFound = this._routesHandler.forRoutes((r, key, map) => {
-      let matches = new this._PathParser(url)
-        .parsePath(r.regexp)
+      let matches = new this._PathParser(url).parsePath(r.regexp)
       if (matches !== null) {
         route = r
         params = matches.groups
@@ -110,23 +110,8 @@ class Router {
       return false
     })
     if (!isFound) {
-      throw new NotFoundException(url, 'Url not found')
+      throw new RouteNotFoundException(url, 'Url not found')
     }
-    return {route, params}
+    return new RouteWithParams(route, params)
   }
-
-  /**
-   *
-   * @param {string} url
-   */
-  callBackRoute(url) {
-    const {route, params} = this.routeByUrl(url)
-    if (route !== null) {
-      route.callback(params)
-    }
-  }
-}
-
-export {
-  Router
 }

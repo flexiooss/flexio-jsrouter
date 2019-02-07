@@ -2,8 +2,31 @@
 import {TestCase} from 'code-altimeter-js'
 import {RouterBuilder} from '../RouterBuilder'
 import {Route} from '../Route'
+import {RouteWithParams} from '../RouteWithParams'
 
 const assert = require('assert')
+
+const firstRoute = new Route(
+  'test',
+  '^/page/([\\-_\\w]*)/?([\\d]*)?/?$',
+  (params) => {
+    console.log(params)
+  }
+)
+const otherRoute = new Route(
+  'test2',
+  '^/pages/(?<pageName>[\\-_\\w]*)/?(?<pageID>[\\d]*)?/?$',
+  (params) => {
+    console.log(params)
+  }
+)
+const otherRoute3 = new Route(
+  'test3',
+  '^/pages/(?<pageName>[\\-_\\w]*)/?(?<pageID>[\\d]*)?/?$',
+  (params) => {
+    console.log(params)
+  }
+)
 
 /**
  * @extends TestCase
@@ -20,13 +43,6 @@ export class TestRouter extends TestCase {
   }
 
   testAddRoute() {
-    const route = new Route(
-      'test',
-      '^/page/([\\-_\\w]*)/?([\\d]*)?/?$',
-      (params) => {
-        console.log(params)
-      }
-    )
     const routeWithSameName = new Route(
       'test',
       '^/page/([\\-_\\w]*)/?([\\d]*)?/?$',
@@ -35,11 +51,11 @@ export class TestRouter extends TestCase {
       }
     )
 
-    this.publicRouteHandler.addRoute(route)
+    this.publicRouteHandler.addRoute(firstRoute)
 
     assert.deepStrictEqual(
       this.router.route('test'),
-      route,
+      firstRoute,
       'should retrieve route by name'
     )
 
@@ -49,87 +65,51 @@ export class TestRouter extends TestCase {
   }
 
   testRemoveRoute() {
-    const route = new Route(
-      'test',
-      '^/page/([\\-_\\w]*)/?([\\d]*)?/?$',
-      (params) => {
-        console.log(params)
-      }
-    )
-    this.publicRouteHandler.addRoute(route)
+    this.publicRouteHandler.addRoute(firstRoute)
     this.publicRouteHandler.removeRoute('test')
 
     assert.notDeepStrictEqual(
       this.router.route('test'),
-      route,
-      'should not be retrieve removed Lroute by name'
+      firstRoute,
+      'should not be retrieve removed route by name'
     )
   }
 
   testInvokeCallback() {
     let martyr1 = false
-    const route = new Route(
-      'test',
-      '^/page/(?<pageName>[\\-_\\w]*)/?(?<pageID>[\\d]*)?/?$',
+
+    const routeWithCallback = new Route(
+      'testMartyr1',
+      '^/martyr/(?<pageName>[\\-_\\w]*)/?(?<pageID>[\\d]*)?/?$',
       (params) => {
         martyr1 = true
-        console.log('params')
-        console.log(params)
-      }
-    )
-    const otherRouteUrlFalse = 'pages/bobo/7/'
-    const otherRoute = new Route(
-      'test2',
-      '^/pages/(?<pageName>[\\-_\\w]*)/?(?<pageID>[\\d]*)?/?$',
-      (params) => {
-        console.log(params)
-      }
-    )
-    const otherRoute3 = new Route(
-      'test3',
-      '^/pages/(?<pageName>[\\-_\\w]*)/?(?<pageID>[\\d]*)?/?$',
-      (params) => {
         console.log(params)
       }
     )
 
     this.publicRouteHandler
-      .addRoute(route)
+      .addRoute(firstRoute)
       .addRoute(otherRoute)
+      .addRoute(routeWithCallback)
       .addRoute(otherRoute3)
 
-    const routeUrl = '/page/bibi/5'
-    this.router.callBackRoute(routeUrl)
+    const routeUrl = '/martyr/bibi/5'
+    const routeWithParams = this.router.routeByUrl(routeUrl)
+
+    routeWithParams.route.callback(routeWithParams.params)
 
     assert.ok(martyr1, 'route test callback should be invoked')
   }
 
   testNotFound() {
-    const route = new Route(
-      'test',
-      '^/page/(?<pageName>[\\-_\\w]*)/?(?<pageID>[\\d]*)?/?$',
-      (params) => {
-        console.log('params')
-        console.log(params)
-      }
-    )
-
-    const otherRoute = new Route(
-      'test2',
-      '^/pages/(?<pageName>[\\-_\\w]*)/?(?<pageID>[\\d]*)?/?$',
-      (params) => {
-        console.log(params)
-      }
-    )
-
     this.publicRouteHandler
-      .addRoute(route)
+      .addRoute(firstRoute)
       .addRoute(otherRoute)
 
     const otherRouteUrlFalse = 'book/bobo/7/'
 
     assert.throws(() => {
-      this.router.callBackRoute(otherRouteUrlFalse)
+      const routeWithParams = this.router.routeByUrl(otherRouteUrlFalse)
     })
   }
 }
