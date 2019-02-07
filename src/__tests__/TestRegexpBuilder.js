@@ -1,6 +1,6 @@
 /* global runTest */
 import {TestCase} from 'code-altimeter-js'
-import {PathParser} from '../PathParser'
+import {RegexpBuilder} from '../TemplateUrl/RegexpBuilder'
 
 const assert = require('assert')
 
@@ -8,19 +8,20 @@ const assert = require('assert')
  * @extends TestCase
  */
 export class TestRegexpBuilder extends TestCase {
-
-  testShouldMatch() {
-    const path = '/page/bobo/7/'
-    const parser = new PathParser(path)
-    const matches = parser.parsePath('^/page/(?<pageName>[\\-_\\w]*)/?(?<pageID>[\\d]*)?/?$')
+  testTemplateToRegexp() {
+    const urlTemplate = '/page/{category}/{pageId}'
+    console.log('ici')
+    const re = RegexpBuilder.fromUrlTemplate(urlTemplate)
+    const url = '/page/bobo/7/'
+    const matches = re.exec(url)
 
     assert.strictEqual(
-      matches.groups.pageName,
+      matches.groups.category,
       'bobo',
       'should retrieve first url parameters'
     )
     assert.strictEqual(
-      matches.groups.pageID,
+      matches.groups.pageId,
       '7',
       'should retrieve 2nd url parameters'
     )
