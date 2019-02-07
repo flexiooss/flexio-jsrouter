@@ -10,14 +10,25 @@ const PARAMETER_TEMPLATE_RE = PARAMETER_TEMPLATE_RE_IN + '(' + PARAMETER_RE + ')
  */
 const __memoizeRegexp = new Map()
 
-export class RegexpBuilder {
+export class UrlTemplateRegexp {
   /**
    * @param {string} urlTemplate
    * @return {RegExp}
    */
-  static fromUrlTemplate(urlTemplate) {
-    console.log(urlTemplate)
+  static regexpFromUrlTemplate(urlTemplate) {
     return new this().__templateToRegexp(urlTemplate)
+  }
+
+  /**
+   *
+   * @param {string} urlTemplate
+   * @param {Object} routeParameter
+   * @return {string}
+   * @constructor
+   * @static
+   */
+  static UrlFromUrlTemplate(urlTemplate, routeParameter) {
+    return new this().__templateToUrl(urlTemplate, routeParameter)
   }
 
   /**
@@ -33,7 +44,6 @@ export class RegexpBuilder {
     do {
       matches = re.exec(urlTemplate)
       if (matches) {
-        console.log(matches)
         stringRe = stringRe.replace(
           this.__getCompiledRegexp(this.__searchTemplateParam(matches[1])),
           this.__namedGroup(matches[1])
@@ -51,7 +61,6 @@ export class RegexpBuilder {
    * @private
    */
   __getCompiledRegexp(stringRegexp, resetIndex = true) {
-    console.log(stringRegexp)
     if (!__memoizeRegexp.has(stringRegexp)) {
       __memoizeRegexp.set(
         stringRegexp,
@@ -103,5 +112,38 @@ export class RegexpBuilder {
    */
   __addTraillingSlashesRegex(stringRe) {
     return stringRe + '/?$'
+  }
+
+  /**
+   *
+   * @param {string} urlTemplate
+   * @param {Object} routeParameter
+   * @return {URL}
+   */
+  __templateToUrl(urlTemplate, routeParameter) {
+    var matches
+    const re = this.__getCompiledRegexp(PARAMETER_TEMPLATE_RE)
+    var url = urlTemplate
+    do {
+      matches = re.exec(urlTemplate)
+      if (matches) {
+        url = url.replace(
+          this.__getCompiledRegexp(this.__searchTemplateParam(matches[1])),
+          this.__getValueByKey(matches[1], routeParameter)
+        )
+      }
+    } while (matches)
+    return url
+  }
+
+  /**
+   *
+   * @param {string} key
+   * @param {Object<string,*>} obj
+   * @return {string}
+   * @private
+   */
+  __getValueByKey(key, obj) {
+    return obj[key].toString()
   }
 }
