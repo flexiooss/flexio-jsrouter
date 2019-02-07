@@ -1,27 +1,24 @@
-import {isRegex, isFunction, isString, assert} from 'flexio-jshelpers'
+import {isFunction, isString, assert} from 'flexio-jshelpers'
 
 export class Route {
   /**
    *
-   * @param {string} name
-   * @param {string} regexpString
+   * @param {string} urlTemplate : page/{myProperty}/{myOtherProperty}
+   * @param {ValueObjectBuilder} builder
    * @param {Function} callback
    */
-  constructor(name, regexpString, callback) {
+  constructor(urlTemplate, builder, callback) {
     assert(
-      isString(name),
-      'Route `name` argument should be a string'
+      isString(urlTemplate),
+      'Route `urlTemplate` argument should be a string'
     )
-    assert(
-      isString(regexpString),
-      'Route `regexp` argument should be a string'
-    )
+
     assert(
       isFunction(callback),
       'Route `callback` argument should be a Function'
     )
-    this._name = name
-    this._regexp = regexpString
+    this._urlTemplate = urlTemplate
+    this._builder = builder
     this._callback = callback
   }
 
@@ -29,16 +26,16 @@ export class Route {
    *
    * @return {string}
    */
-  get name() {
-    return this._name
+  get urlTemplate() {
+    return this._urlTemplate
   }
 
   /**
    *
-   * @return {string}
+   * @return {ValueObjectBuilder}
    */
-  get regexp() {
-    return this._regexp
+  get builder() {
+    return this._builder
   }
 
   /**
