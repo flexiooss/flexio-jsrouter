@@ -73,13 +73,11 @@ export class TestRouter extends TestCase {
 
   testRemoveRoute() {
     this.publicRouteHandler.addRoute(firstRoute)
-    this.publicRouteHandler.removeRoute('test')
+    this.publicRouteHandler.removeRoute('firstRoute')
 
-    assert.notDeepStrictEqual(
-      this.router.route('test'),
-      firstRoute,
-      'should not be retrieve removed route by name'
-    )
+    assert.throws(() => {
+      this.router.route('firstRoute')
+    })
   }
 
   testInvokeCallback() {
@@ -101,7 +99,7 @@ export class TestRouter extends TestCase {
       .addRoute(routeWithCallback)
       .addRoute(yetAnOtherRoute)
 
-    const routeUrl = '/martyr/bibi/5'
+    const routeUrl = 'routeWithCallback/bibi/5'
     const routeWithParams = this.router.routeByUrl(routeUrl)
 
     routeWithParams.route.callback(routeWithParams.params)
@@ -122,4 +120,4 @@ export class TestRouter extends TestCase {
   }
 }
 
-runTest(TestRouter)
+runTest(TestRouter, 'testInvokeCallback')

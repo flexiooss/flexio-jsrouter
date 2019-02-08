@@ -1,6 +1,6 @@
-import {RouteHandler} from './Route/RoutesHandler'
-import {PathParser} from './PathParser'
-import {PublicRouteHandler} from './Route/PublicRoutesHandler'
+import {RouteHandler} from './Route/RouteHandler'
+import {UrlParser} from './UrlParser'
+import {PublicRouteHandler} from './Route/PublicRouteHandler'
 import {RouteWithParams} from './Route/RouteWithParams'
 import {
   HashParser
@@ -29,7 +29,7 @@ export class Router {
      * @private
      */
     this._browserLocation = null
-    this._PathParser = PathParser
+    this._PathParser = UrlParser
     // this._HashParser = HashParser
     // this._QueryParser = QueryParser
   }
@@ -97,22 +97,9 @@ export class Router {
    *
    * @param {string} url
    * @return {RouteWithParams}
+   * @throws {RouteNotFoundException}
    */
   routeByUrl(url) {
-    var route = null
-    var params = null
-    const isFound = this._routesHandler.forRoutes((r, key, map) => {
-      let matches = new this._PathParser(url).parsePath(r.regexp)
-      if (matches !== null) {
-        route = r
-        params = matches.groups
-        return true
-      }
-      return false
-    })
-    if (!isFound) {
-      throw new RouteNotFoundException(url, 'Url not found')
-    }
-    return new RouteWithParams(route, params)
+    return this._routesHandler.routeByUrl(url)
   }
 }

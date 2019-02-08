@@ -1,7 +1,10 @@
 import {assert} from 'flexio-jshelpers'
 import {Route} from './Route'
-
-const __routes = Symbol('__routes')
+import {RouteCompiled} from './RouteCompiled'
+import {UrlTemplateRegexp} from '../TemplateUrl/UrlTemplateRegexp'
+import {RouteNotFoundException} from '../../RouteNotFoundException'
+import {UrlParser} from '../UrlParser'
+import {RouteWithParams} from './RouteWithParams'
 
 /**
  * @implements {RouteHandlerInterface}
@@ -11,11 +14,19 @@ export class RouteHandler {
   constructor() {
     /**
      *
-     * @type {Map<string, Route>}
+     * @type {Map<string, RouteCompiled>}
      * @property
      * @private
      */
-    this[__routes] = new Map()
+    this.__routes = new Map()
+  }
+
+  /**
+   *
+   * @return {Map<string, RouteCompiled>}
+   */
+  get routes() {
+    return this.__routes
   }
 
   /**
@@ -28,16 +39,25 @@ export class RouteHandler {
       'flexio-jsrouter:RoutesHandler:addRoute : `route` argument should be an instance of Route')
 
     assert(
-      !this[__routes].has(route.name),
+      !this.__routes.has(route.name),
       'flexio-jsrouter:RoutesHandler:addRoute: route name `%s`  already exists',
       route.name
     )
-    this[__routes].set(route.name, route)
-    return this
+    return this.__registerRoute(route)
   }
 
+  /**
+   *
+   * @param {Route} route
+   * @return {RouteHandler}
+   * @private
+   */
   __registerRoute(route) {
-
+    this.__routes.set(
+      route.name,
+      new RouteCompiled(route, UrlTemplateRegexp.regexpFromUrlTemplate(route.urlTemplate))
+    )
+    return this
   }
 
   /**
@@ -46,7 +66,7 @@ export class RouteHandler {
    * @return {RouteHandler}
    */
   removeRoute(name) {
-    this[__routes].delete(name)
+    this.__routes.delete(name)
     return this
   }
 
@@ -56,7 +76,7 @@ export class RouteHandler {
    * @return {boolean}
    */
   hasRoute(name) {
-    return this[__routes].has(name)
+    return this.__routes.has(name)
   }
 
   /**
@@ -65,40 +85,34 @@ export class RouteHandler {
    * @return {Route}
    */
   route(name) {
-    return this[__routes].get(name)
-  }
-
-  /**
-   *
-   * @param {RouteHandler~MapCallback} callback
-   */
-  forEachRoutes(callback) {
-    this[__routes].forEach(callback)
-  }
-
-  /**
-   *
-   * @param {RouteHandler~MapCallback} callback
-   * @return {boolean}
-   */
-  forRoutes(callback) {
-    const entries = this[__routes].entries()
-    /**
-     * @type {array<string, Route>} item
-     */
-    for (const item of entries) {
-      if (callback(item[1], item[0], this[__routes])) {
-        return true
-      }
+    if (!this.hasRoute(name)) {
+      throw new RouteNotFoundException(name, 'Route not found with name : ' + name)
     }
-    return false
+    return this.__routes.get(name).route
   }
 
   /**
-   * @callback RoutesHandler~MapCallback
-   * @param {Route} route
-   * @param {string} nameL
-   * @param {Map<string, Route>} routes
-   * @return {boolean}
+   *
+   * @param {string} url
+   * @return {RouteWithParams}
+   * @throws {RouteNotFoundException}
    */
+  routeByUrl(url) {
+    var route = null
+    var params = null
+    var isFound = false
+
+    this.__routes.forEach((routeCompiled) => {
+      let matches = new UrlParser(url).execWith(routeCompiled.regexp)
+      if (isFound === false && matches !== null) {
+        route = routeCompiled.route
+        params = matches.groups
+        isFound = true
+      }
+    })
+    if (!isFound) {
+      throw new RouteNotFoundException(url, 'Route not found with url : ' + url)
+    }
+    return new RouteWithParams(route, params)
+  }
 }

@@ -1,5 +1,5 @@
 import {Router} from '../Router'
-import {RouteHandler} from './RoutesHandler'
+import {RouteHandler} from './RouteHandler'
 
 export class RouterBuilder {
   /**

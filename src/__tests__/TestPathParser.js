@@ -1,6 +1,6 @@
 /* global runTest */
 import {TestCase} from 'code-altimeter-js'
-import {PathParser} from '../PathParser'
+import {UrlParser} from '../PathParser'
 
 const assert = require('assert')
 
@@ -10,8 +10,8 @@ const assert = require('assert')
 export class TestPathParser extends TestCase {
   testShouldMatch() {
     const path = '/page/bobo/7/'
-    const parser = new PathParser(path)
-    const matches = parser.parsePath('^/page/(?<pageName>[\\-_\\w]*)/?(?<pageID>[\\d]*)?/?$')
+    const parser = new UrlParser(path)
+    const matches = parser.parseWith('^/page/(?<pageName>[\\-_\\w]*)/?(?<pageID>[\\d]*)?/?$')
 
     assert.strictEqual(
       matches.groups.pageName,
