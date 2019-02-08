@@ -120,4 +120,4 @@ export class TestRouter extends TestCase {
   }
 }
 
-runTest(TestRouter, 'testInvokeCallback')
+runTest(TestRouter)
