@@ -2,11 +2,11 @@
  *
  * @interface
  */
-export class RoutesHandlerInterface {
+export class RouteHandlerInterface {
   /**
    *
    * @param {Route} route
-   * @return {RoutesHandler}
+   * @return {RouteHandler}
    */
   addRoute(route) {
   }
@@ -14,7 +14,7 @@ export class RoutesHandlerInterface {
   /**
    *
    * @param {string} name
-   * @return {RoutesHandler}
+   * @return {RouteHandler}
    */
   removeRoute(name) {
   }
@@ -37,7 +37,7 @@ export class RoutesHandlerInterface {
 
   /**
    *
-   * @param {RoutesHandler~MapCallback} callback
+   * @param {RouteHandler~MapCallback} callback
    */
   forEachRoutes(callback) {
   }

@@ -4,10 +4,10 @@ import {Route} from './Route'
 const __routes = Symbol('__routes')
 
 /**
- * @implements {RoutesHandlerInterface}
- * @class RoutesHandler
+ * @implements {RouteHandlerInterface}
+ * @class RouteHandler
  */
-export class RoutesHandler {
+export class RouteHandler {
   constructor() {
     /**
      *
@@ -21,7 +21,7 @@ export class RoutesHandler {
   /**
    *
    * @param {Route} route
-   * @return {RoutesHandler}
+   * @return {RouteHandler}
    */
   addRoute(route) {
     assert(route instanceof Route,
@@ -36,10 +36,14 @@ export class RoutesHandler {
     return this
   }
 
+  __registerRoute(route) {
+
+  }
+
   /**
    *
    * @param {string} name
-   * @return {RoutesHandler}
+   * @return {RouteHandler}
    */
   removeRoute(name) {
     this[__routes].delete(name)
@@ -66,7 +70,7 @@ export class RoutesHandler {
 
   /**
    *
-   * @param {RoutesHandler~MapCallback} callback
+   * @param {RouteHandler~MapCallback} callback
    */
   forEachRoutes(callback) {
     this[__routes].forEach(callback)
@@ -74,7 +78,7 @@ export class RoutesHandler {
 
   /**
    *
-   * @param {RoutesHandler~MapCallback} callback
+   * @param {RouteHandler~MapCallback} callback
    * @return {boolean}
    */
   forRoutes(callback) {

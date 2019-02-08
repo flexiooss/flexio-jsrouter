@@ -1,7 +1,7 @@
-import {RoutesHandler} from './RoutesHandler'
+import {RouteHandler} from './Route/RoutesHandler'
 import {PathParser} from './PathParser'
-import {PublicRoutesHandler} from './PublicRoutesHandler'
-import {RouteWithParams} from './RouteWithParams'
+import {PublicRouteHandler} from './Route/PublicRoutesHandler'
+import {RouteWithParams} from './Route/RouteWithParams'
 import {
   HashParser
 } from './HashParser'
@@ -9,6 +9,7 @@ import {
   QueryParser
 } from './QueryParser'
 import {RouteNotFoundException} from '../RouteNotFoundException'
+import {Route} from './Route/Route'
 
 /**
  *
@@ -18,7 +19,7 @@ import {RouteNotFoundException} from '../RouteNotFoundException'
 export class Router {
   /**
    *
-   * @param {RoutesHandlerInterface} routesHandler
+   * @param {RouteHandlerInterface} routesHandler
    */
   constructor(routesHandler) {
     this._routesHandler = routesHandler
@@ -35,10 +36,10 @@ export class Router {
 
   /**
    *
-   * @return {PublicRoutesHandler}
+   * @return {PublicRouteHandler}
    */
   routeHandler() {
-    return new PublicRoutesHandler(this)
+    return new PublicRouteHandler(this, Route)
   }
 
   /**

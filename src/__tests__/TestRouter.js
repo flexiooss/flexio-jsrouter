@@ -1,28 +1,39 @@
 /* global runTest */
 import {TestCase} from 'code-altimeter-js'
-import {RouterBuilder} from '../RouterBuilder'
-import {Route} from '../Route'
-import {RouteWithParams} from '../RouteWithParams'
+import {RouterBuilder} from '../Route/RouterBuilder'
+import {Route} from '../Route/Route'
+import {RouteWithParams} from '../Route/RouteWithParams'
 
 const assert = require('assert')
+/**
+ *
+ * @param {Object} obj
+ * @return {Object}
+ */
+const builder = obj => Object.assign({}, obj)
 
 const firstRoute = new Route(
-  'test',
-  '^/page/([\\-_\\w]*)/?([\\d]*)?/?$',
+  'firstRoute',
+  'firstRoute/{pageName}/{pageId}',
+  builder,
   (params) => {
     console.log(params)
   }
 )
+
 const otherRoute = new Route(
-  'test2',
-  '^/pages/(?<pageName>[\\-_\\w]*)/?(?<pageID>[\\d]*)?/?$',
+  'otherRoute',
+  'otherRoute/{pageName}/{pageId}',
+  builder,
   (params) => {
     console.log(params)
   }
 )
-const otherRoute3 = new Route(
-  'test3',
-  '^/pages/(?<pageName>[\\-_\\w]*)/?(?<pageID>[\\d]*)?/?$',
+
+const yetAnOtherRoute = new Route(
+  'yetAnOtherRoute',
+  'yetAnOtherRoute/{pageName}/{pageId}',
+  builder,
   (params) => {
     console.log(params)
   }
@@ -37,15 +48,11 @@ export class TestRouter extends TestCase {
     this.publicRouteHandler = this.router.routeHandler()
   }
 
-  tearDown() {
-    delete this.router
-    delete this.publicRouteHandler
-  }
-
   testAddRoute() {
-    const routeWithSameName = new Route(
-      'test',
-      '^/page/([\\-_\\w]*)/?([\\d]*)?/?$',
+    const routeWithSameName = this.publicRouteHandler.buildRoute(
+      'firstRoute',
+      'routeWithSameName/{pageName}/{pageId}',
+      builder,
       (params) => {
         console.log(params)
       }
@@ -54,7 +61,7 @@ export class TestRouter extends TestCase {
     this.publicRouteHandler.addRoute(firstRoute)
 
     assert.deepStrictEqual(
-      this.router.route('test'),
+      this.router.route('firstRoute'),
       firstRoute,
       'should retrieve route by name'
     )
@@ -79,8 +86,9 @@ export class TestRouter extends TestCase {
     let martyr1 = false
 
     const routeWithCallback = new Route(
-      'testMartyr1',
-      '^/martyr/(?<pageName>[\\-_\\w]*)/?(?<pageID>[\\d]*)?/?$',
+      'routeWithCallback',
+      'routeWithCallback/{pageName}/{pageId}',
+      builder,
       (params) => {
         martyr1 = true
         console.log(params)
@@ -91,7 +99,7 @@ export class TestRouter extends TestCase {
       .addRoute(firstRoute)
       .addRoute(otherRoute)
       .addRoute(routeWithCallback)
-      .addRoute(otherRoute3)
+      .addRoute(yetAnOtherRoute)
 
     const routeUrl = '/martyr/bibi/5'
     const routeWithParams = this.router.routeByUrl(routeUrl)
