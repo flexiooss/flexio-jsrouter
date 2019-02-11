@@ -80,6 +80,25 @@ export class TestRouter extends TestCase {
     })
   }
 
+  testBuilder() {
+    this.publicRouteHandler
+      .addRoute(firstRoute)
+      .addRoute(otherRoute)
+      .addRoute(yetAnOtherRoute)
+
+    const routeUrl = 'firstRoute/bibi/5'
+    const routeWithParams = this.router.routeByUrl(routeUrl)
+
+    assert.notDeepStrictEqual(routeWithParams.params,
+      {pageName: 'bibi', pageId: '5'},
+      'route params prototype should be null'
+    )
+    assert.deepStrictEqual(routeWithParams.route.builder(routeWithParams.params),
+      {pageName: 'bibi', pageId: '5'},
+      'route builder should be invoked'
+    )
+  }
+
   testInvokeCallback() {
     let martyr1 = false
 
@@ -89,6 +108,7 @@ export class TestRouter extends TestCase {
       builder,
       (params) => {
         martyr1 = true
+        console.log('testInvokeCallback payload : ')
         console.log(params)
       }
     )
@@ -102,7 +122,9 @@ export class TestRouter extends TestCase {
     const routeUrl = 'routeWithCallback/bibi/5'
     const routeWithParams = this.router.routeByUrl(routeUrl)
 
-    routeWithParams.route.callback(routeWithParams.params)
+    routeWithParams.route.callback(
+      routeWithParams.route.builder(routeWithParams.params)
+    )
 
     assert.ok(martyr1, 'route test callback should be invoked')
   }

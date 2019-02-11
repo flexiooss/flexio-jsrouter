@@ -37,15 +37,10 @@ export class RouteHandlerInterface {
 
   /**
    *
-   * @param {RouteHandler~MapCallback} callback
+   * @param {string} url
+   * @return {RouteWithParams}
+   * @throws {RouteNotFoundException}
    */
-  forEachRoutes(callback) {
+  routeByUrl(url) {
   }
-
-  /**
-   * @callback RoutesHandler~MapCallback
-   * @param {Route} route
-   * @param {string} nameL
-   * @param {Map<string, Route>} routes
-   */
 }

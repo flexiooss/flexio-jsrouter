@@ -50,7 +50,7 @@ export class PublicRouteHandler {
    * @param {Object} routeParameters
    * @param {URL} url
    */
-  url(name, routeParameters, url) {
+  url(name, routeParameters, url = null) {
 
   }
 }

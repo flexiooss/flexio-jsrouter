@@ -104,12 +104,14 @@ export class RouteHandler {
 
     this.__routes.forEach((routeCompiled) => {
       let matches = new UrlParser(url).execWith(routeCompiled.regexp)
+
       if (isFound === false && matches !== null) {
         route = routeCompiled.route
         params = matches.groups
         isFound = true
       }
     })
+
     if (!isFound) {
       throw new RouteNotFoundException(url, 'Route not found with url : ' + url)
     }

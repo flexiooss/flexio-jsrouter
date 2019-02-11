@@ -1,4 +1,3 @@
 import './TestRouter'
-// import './TestPathParser'
-// import './TestUrlTemplateRegexp'
+import './TestUrlTemplateRegexp'
 // import './perfTest'
