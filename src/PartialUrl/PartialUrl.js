@@ -1,40 +1,81 @@
+import {PathName} from './PathName'
+import {Hash} from './Hash'
+import {SearchParams} from './SearchParams'
+
 export class PartialUrl {
   constructor() {
     /**
      *
-     * @type {?PathName}
+     * @type {PathName}
      * @private
      */
-    this.__pathname = null
+    this.__pathname = new PathName()
     /**
      *
-     * @type {?Hash}
+     * @type {Hash}
      * @private
      */
-    this.__hash = null
+    this.__hash = new Hash()
     /**
      *
-     * @type {?SearchParams}
+     * @type {SearchParams}
      * @private
      */
-    this.__searchParams = null
+    this.__searchParams = new SearchParams()
   }
 
   /**
    *
-   * @return {?PathName}
+   * @return {PathName}
    */
-  get pathname(){
+  get pathname() {
     return this.__pathname
   }
 
   /**
    *
-   * @return {?Hash}
+   * @return {Hash}
    */
-  get hash(){
-  return this.__hash
+  get hash() {
+    return this.__hash
   }
 
-  get se
+  /**
+   *
+   * @return {SearchParams}
+   */
+  get searchParams() {
+    return this.__searchParams
+  }
+
+  /**
+   *
+   * @param {string} pathName
+   * @return {PartialUrl}
+   */
+  withPathName(pathName) {
+    this.__pathname = new PathName(pathName)
+    return this
+  }
+
+  /**
+   *
+   * @param {string} hash
+   * @return {PartialUrl}
+   */
+  withHash(hash) {
+    this.__hash = new Hash(hash)
+    return this
+  }
+
+  /**
+   *
+   * @param {string} key
+   * @param {string} value
+   * @return {PartialUrl}
+   */
+  withSearchParam(key, value) {
+    this.__searchParams.value.set(key, value)
+    return this
+  }
 }
