@@ -3,6 +3,7 @@ import {TestCase} from 'code-altimeter-js'
 import {RouterBuilder} from '../Route/RouterBuilder'
 import {Route} from '../Route/Route'
 import {RouteWithParams} from '../Route/RouteWithParams'
+import {PublicRouteHandler} from '../Route/PublicRouteHandler'
 
 const assert = require('assert')
 /**
@@ -45,7 +46,7 @@ const yetAnOtherRoute = new Route(
 export class TestRouter extends TestCase {
   setUp() {
     this.router = RouterBuilder.build()
-    this.publicRouteHandler = this.router.routeHandler()
+    this.publicRouteHandler = new PublicRouteHandler(this.router, Route)
   }
 
   testAddRoute() {
@@ -78,6 +79,17 @@ export class TestRouter extends TestCase {
     assert.throws(() => {
       this.router.route('firstRoute')
     })
+  }
+
+  testUrlByName() {
+    this.publicRouteHandler
+      .addRoute(firstRoute)
+      .addRoute(otherRoute)
+      .addRoute(yetAnOtherRoute)
+
+    const url = this.publicRouteHandler.url('firstRoute', {pageName: 'bibi', pageId: 5})
+
+    assert.ok(url === 'firstRoute/bibi/5', 'should retrieve url from name with params')
   }
 
   testBuilder() {

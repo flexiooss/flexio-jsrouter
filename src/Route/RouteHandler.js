@@ -117,4 +117,20 @@ export class RouteHandler {
     }
     return new RouteWithParams(route, params)
   }
+
+  /**
+   *
+   * @param {string} name
+   * @param {Object} routeParameters
+   * @param {?PartialUrl} partialUrl
+   * @return {string}
+   */
+  urlByName(name, routeParameters, partialUrl) {
+    if (!this.__routes.has(name)) {
+      throw new RouteNotFoundException(name, 'Route not found with name : ' + name)
+    }
+    const routeCompiled = this.__routes.get(name)
+    const url = UrlTemplateRegexp.UrlFromUrlTemplate(routeCompiled.route.urlTemplate, routeParameters)
+    return url
+  }
 }

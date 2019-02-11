@@ -48,9 +48,10 @@ export class PublicRouteHandler {
    *
    * @param {string} name
    * @param {Object} routeParameters
-   * @param {URL} url
+   * @param {?PartialUrl} partialUrl
+   * @return {URL}
    */
-  url(name, routeParameters, url = null) {
-
+  url(name, routeParameters, partialUrl = null) {
+    return this[__router].urlByName(name, routeParameters, partialUrl)
   }
 }

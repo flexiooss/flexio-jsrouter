@@ -36,14 +36,6 @@ export class Router {
 
   /**
    *
-   * @return {PublicRouteHandler}
-   */
-  routeHandler() {
-    return new PublicRouteHandler(this, Route)
-  }
-
-  /**
-   *
    * @param {Route} route
    * @return {Router}
    */
@@ -84,13 +76,12 @@ export class Router {
   /**
    *
    * @param {string} name
-   * @param params
-   * @param queryParams
-   * @param hash
-   * @return {string}
+   * @param {Object} routeParameters
+   * @param {?PartialUrl} partialUrl
+   * @return {URL}
    */
-  urlByRouteName(name, params, queryParams, hash) {
-    return new this._PathParser(this.route(name).path).regexToUrl(params)
+  urlByName(name, routeParameters, partialUrl) {
+    return this._routesHandler.urlByName(name, routeParameters, partialUrl)
   }
 
   /**

@@ -118,7 +118,7 @@ export class UrlTemplateRegexp {
    *
    * @param {string} urlTemplate
    * @param {Object} routeParameter
-   * @return {URL}
+   * @return {string}
    */
   __templateToUrl(urlTemplate, routeParameter) {
     var matches
