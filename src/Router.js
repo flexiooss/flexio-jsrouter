@@ -1,5 +1,5 @@
 import {RouteHandler} from './Route/RouteHandler'
-import {UrlParser} from './UrlParser'
+import {PathNameParser} from './UrlParser'
 import {PublicRouteHandler} from './Route/PublicRouteHandler'
 import {RouteWithParams} from './Route/RouteWithParams'
 import {
@@ -29,7 +29,7 @@ export class Router {
      * @private
      */
     this._browserLocation = null
-    this._PathParser = UrlParser
+    this._PathParser = PathNameParser
     // this._HashParser = HashParser
     // this._QueryParser = QueryParser
   }
@@ -86,11 +86,11 @@ export class Router {
 
   /**
    *
-   * @param {string} url
+   * @param {PathName} pathname
    * @return {RouteWithParams}
    * @throws {RouteNotFoundException}
    */
-  routeByUrl(url) {
-    return this._routesHandler.routeByUrl(url)
+  routeByPathname(pathname) {
+    return this._routesHandler.routeByUrl(pathname.value)
   }
 }

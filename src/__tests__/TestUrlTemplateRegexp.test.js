@@ -17,12 +17,12 @@ export class TestUrlTemplateRegexpTest extends TestCase {
     assert.strictEqual(
       matches.groups.category,
       'bobo',
-      'should retrieve first url parameters'
+      'should retrieve first pathname parameters'
     )
     assert.strictEqual(
       matches.groups.pageId,
       '7',
-      'should retrieve 2nd url parameters'
+      'should retrieve 2nd pathname parameters'
     )
   }
 
@@ -34,7 +34,7 @@ export class TestUrlTemplateRegexpTest extends TestCase {
     assert.strictEqual(
       url,
       expectedUrl,
-      'should retrieve url with parameters'
+      'should retrieve pathname with parameters'
     )
   }
 }

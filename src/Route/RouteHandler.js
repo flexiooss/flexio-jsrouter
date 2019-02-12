@@ -3,7 +3,7 @@ import {Route} from './Route'
 import {RouteCompiled} from './RouteCompiled'
 import {UrlTemplateRegexp} from '../TemplateUrl/UrlTemplateRegexp'
 import {RouteNotFoundException} from '../../RouteNotFoundException'
-import {UrlParser} from '../UrlParser'
+import {PathNameParser} from '../UrlParser'
 import {RouteWithParams} from './RouteWithParams'
 
 /**
@@ -93,17 +93,17 @@ export class RouteHandler {
 
   /**
    *
-   * @param {string} url
+   * @param {PathName} pathname
    * @return {RouteWithParams}
    * @throws {RouteNotFoundException}
    */
-  routeByUrl(url) {
+  routeByPathname(pathname) {
     var route = null
     var params = null
     var isFound = false
 
     this.__routes.forEach((routeCompiled) => {
-      let matches = new UrlParser(url).execWith(routeCompiled.regexp)
+      let matches = new PathNameParser(pathname).execWith(routeCompiled.regexp)
 
       if (isFound === false && matches !== null) {
         route = routeCompiled.route
@@ -113,7 +113,7 @@ export class RouteHandler {
     })
 
     if (!isFound) {
-      throw new RouteNotFoundException(url, 'Route not found with url : ' + url)
+      throw new RouteNotFoundException(pathname, 'Route not found with pathname : ' + pathname)
     }
     return new RouteWithParams(route, params)
   }

@@ -89,7 +89,7 @@ export class TestRouterTest extends TestCase {
 
     const url = this.publicRouteHandler.url('firstRoute', {pageName: 'bibi', pageId: 5})
 
-    assert.ok(url === 'firstRoute/bibi/5', 'should retrieve url from name with params')
+    assert.ok(url === 'firstRoute/bibi/5', 'should retrieve pathname from name with params')
   }
 
   testBuilder() {
@@ -99,7 +99,7 @@ export class TestRouterTest extends TestCase {
       .addRoute(yetAnOtherRoute)
 
     const routeUrl = 'firstRoute/bibi/5'
-    const routeWithParams = this.router.routeByUrl(routeUrl)
+    const routeWithParams = this.router.routeByPathname(routeUrl)
 
     assert.notDeepStrictEqual(routeWithParams.params,
       {pageName: 'bibi', pageId: '5'},
@@ -110,6 +110,8 @@ export class TestRouterTest extends TestCase {
       'route builder should be invoked'
     )
   }
+
+
 
   testInvokeCallback() {
     let martyr1 = false
@@ -132,7 +134,7 @@ export class TestRouterTest extends TestCase {
       .addRoute(yetAnOtherRoute)
 
     const routeUrl = 'routeWithCallback/bibi/5'
-    const routeWithParams = this.router.routeByUrl(routeUrl)
+    const routeWithParams = this.router.routeByPathname(routeUrl)
 
     routeWithParams.route.callback(
       routeWithParams.route.builder(routeWithParams.params)
@@ -149,7 +151,7 @@ export class TestRouterTest extends TestCase {
     const otherRouteUrlFalse = 'book/bobo/7/'
 
     assert.throws(() => {
-      const routeWithParams = this.router.routeByUrl(otherRouteUrlFalse)
+      const routeWithParams = this.router.routeByPathname(otherRouteUrlFalse)
     })
   }
 }
