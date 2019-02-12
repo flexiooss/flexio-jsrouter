@@ -7,7 +7,7 @@ const assert = require('assert')
 /**
  * @extends TestCase
  */
-export class TestUrlTemplateRegexp extends TestCase {
+export class TestUrlTemplateRegexpTest extends TestCase {
   testTemplateToRegexp() {
     const urlTemplate = 'page/{category}/{pageId}'
     const re = UrlTemplateRegexp.regexpFromUrlTemplate(urlTemplate)
@@ -39,4 +39,4 @@ export class TestUrlTemplateRegexp extends TestCase {
   }
 }
 
-runTest(TestUrlTemplateRegexp)
+runTest(TestUrlTemplateRegexpTest)

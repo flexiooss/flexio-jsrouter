@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "code-altimeter-js": "https://github.com/flexiooss/code-altimeter-js.git",
-    "eslint": "^4.18.2",
+    "eslint": "^5.13.0",
     "hotballoon-shed": "https://github.com/flexiooss/hotballoon-shed.git"
   }
 }

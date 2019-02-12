@@ -43,7 +43,7 @@ const yetAnOtherRoute = new Route(
 /**
  * @extends TestCase
  */
-export class TestRouter extends TestCase {
+export class TestRouterTest extends TestCase {
   setUp() {
     this.router = RouterBuilder.build()
     this.publicRouteHandler = new PublicRouteHandler(this.router, Route)
@@ -154,4 +154,4 @@ export class TestRouter extends TestCase {
   }
 }
 
-runTest(TestRouter)
+runTest(TestRouterTest)
