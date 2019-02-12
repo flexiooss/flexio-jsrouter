@@ -1,4 +1,4 @@
-export class Configuration {
+export class UrlConfiguration {
   /**
    *
    * @param {?string} protocol
@@ -63,6 +63,6 @@ export class Configuration {
    * @return {string}
    */
   origin() {
-    return `${this.__protocol}//${this.host()}`
+    return `${this.__protocol}://${this.host()}`
   }
 }

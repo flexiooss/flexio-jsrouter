@@ -1,12 +1,21 @@
 import {PathName} from './PathName'
+
 export class URLHandler {
+  /**
+   *
+   * @param {UrlConfiguration} urlConfiguration
+   */
+  constructor(urlConfiguration) {
+    this.__urlConfiguration = urlConfiguration
+  }
+
   /**
    *
    * @param {URL} url
    * @return {PathName}
    * @constructor
    */
-  static UrlToPathname(url) {
+  urlToPathname(url) {
     return new PathName(url.pathname)
   }
 
@@ -16,7 +25,16 @@ export class URLHandler {
    * @return {PathName}
    * @constructor
    */
-  static LocationToPathname(location) {
+  locationToPathname(location) {
     return new PathName(location.pathname)
+  }
+
+  /**
+   *
+   * @param {PathName} pathname
+   * @return {URL}
+   */
+  pathnameToUrl(pathname) {
+    return new URL(pathname.value, this.__urlConfiguration.origin())
   }
 }

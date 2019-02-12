@@ -3,11 +3,10 @@ import {Route} from './Route'
 import {RouteCompiled} from './RouteCompiled'
 import {UrlTemplateRegexp} from '../TemplateUrl/UrlTemplateRegexp'
 import {RouteNotFoundException} from '../../RouteNotFoundException'
-import {PathNameParser} from '../UrlParser'
+import {PathNameParser} from '../PathNameParser'
 import {RouteWithParams} from './RouteWithParams'
 
 /**
- * @implements {RouteHandlerInterface}
  * @class RouteHandler
  */
 export class RouteHandler {
@@ -122,15 +121,13 @@ export class RouteHandler {
    *
    * @param {string} name
    * @param {Object} routeParameters
-   * @param {?PartialUrl} partialUrl
-   * @return {string}
+   * @return {PathName}
    */
-  urlByName(name, routeParameters, partialUrl) {
+  pathnameByRouteName(name, routeParameters) {
     if (!this.__routes.has(name)) {
       throw new RouteNotFoundException(name, 'Route not found with name : ' + name)
     }
     const routeCompiled = this.__routes.get(name)
-    const url = UrlTemplateRegexp.UrlFromUrlTemplate(routeCompiled.route.urlTemplate, routeParameters)
-    return url
+    return UrlTemplateRegexp.PathnameFromUrlTemplate(routeCompiled.route.urlTemplate, routeParameters)
   }
 }

@@ -1,9 +1,11 @@
 /* global runTest */
 import {TestCase} from 'code-altimeter-js'
-import {RouterBuilder} from '../Route/RouterBuilder'
+import {RouterBuilder} from '../RouterBuilder'
 import {Route} from '../Route/Route'
 import {RouteWithParams} from '../Route/RouteWithParams'
 import {PublicRouteHandler} from '../Route/PublicRouteHandler'
+import {UrlConfiguration} from '../UrlConfiguration'
+import {PathName} from '../URL/PathName'
 
 const assert = require('assert')
 /**
@@ -45,7 +47,11 @@ const yetAnOtherRoute = new Route(
  */
 export class TestRouterTest extends TestCase {
   setUp() {
-    this.router = RouterBuilder.build()
+    this.router = RouterBuilder.build(new UrlConfiguration(
+      'https',
+      'localhost',
+      '8080')
+    )
     this.publicRouteHandler = new PublicRouteHandler(this.router, Route)
   }
 
@@ -88,8 +94,9 @@ export class TestRouterTest extends TestCase {
       .addRoute(yetAnOtherRoute)
 
     const url = this.publicRouteHandler.url('firstRoute', {pageName: 'bibi', pageId: 5})
+    const expectedUrl = new URL('firstRoute/bibi/5', 'https://localhost:8080')
 
-    assert.ok(url === 'firstRoute/bibi/5', 'should retrieve pathname from name with params')
+    assert.deepStrictEqual(url, expectedUrl, 'should retrieve Url from name with params')
   }
 
   testBuilder() {
@@ -98,8 +105,8 @@ export class TestRouterTest extends TestCase {
       .addRoute(otherRoute)
       .addRoute(yetAnOtherRoute)
 
-    const routeUrl = 'firstRoute/bibi/5'
-    const routeWithParams = this.router.routeByPathname(routeUrl)
+    const routePathname = new PathName('firstRoute/bibi/5')
+    const routeWithParams = this.router.routeByPathname(routePathname)
 
     assert.notDeepStrictEqual(routeWithParams.params,
       {pageName: 'bibi', pageId: '5'},
@@ -110,8 +117,6 @@ export class TestRouterTest extends TestCase {
       'route builder should be invoked'
     )
   }
-
-
 
   testInvokeCallback() {
     let martyr1 = false
@@ -133,8 +138,9 @@ export class TestRouterTest extends TestCase {
       .addRoute(routeWithCallback)
       .addRoute(yetAnOtherRoute)
 
-    const routeUrl = 'routeWithCallback/bibi/5'
-    const routeWithParams = this.router.routeByPathname(routeUrl)
+    const routePathname = new PathName('routeWithCallback/bibi/5')
+
+    const routeWithParams = this.router.routeByPathname(routePathname)
 
     routeWithParams.route.callback(
       routeWithParams.route.builder(routeWithParams.params)
@@ -148,7 +154,7 @@ export class TestRouterTest extends TestCase {
       .addRoute(firstRoute)
       .addRoute(otherRoute)
 
-    const otherRouteUrlFalse = 'book/bobo/7/'
+    const otherRouteUrlFalse = new PathName('book/bobo/7/')
 
     assert.throws(() => {
       const routeWithParams = this.router.routeByPathname(otherRouteUrlFalse)

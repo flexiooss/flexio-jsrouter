@@ -52,6 +52,6 @@ export class PublicRouteHandler {
    * @return {URL}
    */
   url(name, routeParameters, partialUrl = null) {
-    return this[__router].urlByName(name, routeParameters, partialUrl)
+    return this[__router].urlByRouteName(name, routeParameters, partialUrl)
   }
 }

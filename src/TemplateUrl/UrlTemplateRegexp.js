@@ -1,3 +1,5 @@
+import {PathName} from '../URL/PathName'
+
 const PARAMETER_RE = '[^/]+'
 const PARAMETER_TEMPLATE_RE_IN = '\{'
 const PARAMETER_TEMPLATE_RE_OUT = '\}'
@@ -23,12 +25,12 @@ export class UrlTemplateRegexp {
    *
    * @param {string} urlTemplate
    * @param {Object} routeParameter
-   * @return {string}
+   * @return {PathName}
    * @constructor
    * @static
    */
-  static UrlFromUrlTemplate(urlTemplate, routeParameter) {
-    return new this().__templateToUrl(urlTemplate, routeParameter)
+  static PathnameFromUrlTemplate(urlTemplate, routeParameter) {
+    return new this().__templateToPathname(urlTemplate, routeParameter)
   }
 
   /**
@@ -118,22 +120,22 @@ export class UrlTemplateRegexp {
    *
    * @param {string} urlTemplate
    * @param {Object} routeParameter
-   * @return {string}
+   * @return {PathName}
    */
-  __templateToUrl(urlTemplate, routeParameter) {
+  __templateToPathname(urlTemplate, routeParameter) {
     var matches
     const re = this.__getCompiledRegexp(PARAMETER_TEMPLATE_RE)
-    var url = urlTemplate
+    var pathname = urlTemplate
     do {
       matches = re.exec(urlTemplate)
       if (matches) {
-        url = url.replace(
+        pathname = pathname.replace(
           this.__getCompiledRegexp(this.__searchTemplateParam(matches[1])),
           this.__getValueByKey(matches[1], routeParameter)
         )
       }
     } while (matches)
-    return url
+    return new PathName(pathname)
   }
 
   /**

@@ -1,15 +1,8 @@
-import {RouteHandler} from './Route/RouteHandler'
-import {PathNameParser} from './UrlParser'
-import {PublicRouteHandler} from './Route/PublicRouteHandler'
-import {RouteWithParams} from './Route/RouteWithParams'
-import {
-  HashParser
-} from './HashParser'
-import {
-  QueryParser
-} from './QueryParser'
-import {RouteNotFoundException} from '../RouteNotFoundException'
-import {Route} from './Route/Route'
+import {PathNameParser} from './PathNameParser'
+import {URLHandler} from './URL/URLHandler'
+import {BrowserLocation} from './BrowserLocation'
+import {assert} from 'flexio-jshelpers'
+import {UrlConfiguration} from './UrlConfiguration'
 
 /**
  *
@@ -18,20 +11,63 @@ import {Route} from './Route/Route'
  */
 export class Router {
   /**
-   *
-   * @param {RouteHandlerInterface} routesHandler
+   * @param {UrlConfiguration} urlConfiguration
+   * @param {RouteHandler} routesHandler
    */
-  constructor(routesHandler) {
+  constructor(urlConfiguration, routesHandler) {
+    assert(
+      urlConfiguration instanceof UrlConfiguration,
+      'Router: `urlConfiguration` argument should be an instance of UrlConfiguration'
+    )
+    /**
+     *
+     * @type {UrlConfiguration}
+     * @private
+     */
+    this._urlConfiguration = urlConfiguration
+    /**
+     *
+     * @type {RouteHandler}
+     * @private
+     */
     this._routesHandler = routesHandler
     /**
      *
-     * @type {?BrowserLocation}
+     * @type {URLHandler}
      * @private
      */
-    this._browserLocation = null
+    this._urlHandler = new URLHandler(this._urlConfiguration)
+    /**
+     *
+     * @type {BrowserLocation}
+     * @private
+     */
+    this._browserLocation = new BrowserLocation()
     this._PathParser = PathNameParser
-    // this._HashParser = HashParser
-    // this._QueryParser = QueryParser
+  }
+
+  /**
+   *
+   * @return {UrlConfiguration}
+   */
+  get urlConfiguration() {
+    return this._urlConfiguration
+  }
+
+  /**
+   *
+   * @return {URLHandler}
+   */
+  get urlHandler() {
+    return this._urlHandler
+  }
+
+  /**
+   *
+   * @return {BrowserLocation}
+   */
+  get browserLocation() {
+    return this._browserLocation
   }
 
   /**
@@ -56,21 +92,11 @@ export class Router {
 
   /**
    *
-   * @param {BrowserLocation} browserLocation
-   * @return {Router}
-   */
-  withBrowserLocation(browserLocation) {
-    this._browserLocation = browserLocation
-    return this
-  }
-
-  /**
-   *
-   * @param key
+   * @param name
    * @return {Route}
    */
-  route(key) {
-    return this._routesHandler.route(key)
+  route(name) {
+    return this._routesHandler.route(name)
   }
 
   /**
@@ -80,8 +106,13 @@ export class Router {
    * @param {?PartialUrl} partialUrl
    * @return {URL}
    */
-  urlByName(name, routeParameters, partialUrl) {
-    return this._routesHandler.urlByName(name, routeParameters, partialUrl)
+  urlByRouteName(name, routeParameters, partialUrl) {
+    // TODO handle partialUrl
+    return this.urlHandler.pathnameToUrl(
+      this._routesHandler.pathnameByRouteName(
+        name,
+        routeParameters)
+    )
   }
 
   /**
@@ -91,6 +122,6 @@ export class Router {
    * @throws {RouteNotFoundException}
    */
   routeByPathname(pathname) {
-    return this._routesHandler.routeByUrl(pathname.value)
+    return this._routesHandler.routeByPathname(pathname)
   }
 }

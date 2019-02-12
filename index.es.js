@@ -1,1 +1,1 @@
-export {RouterBuilder} from './src/Route/RouterBuilder'
+export {RouterBuilder} from './src/RouterBuilder'

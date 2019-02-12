@@ -1,6 +1,8 @@
 /* global runTest */
 import {TestCase} from 'code-altimeter-js'
 import {UrlTemplateRegexp} from '../TemplateUrl/UrlTemplateRegexp'
+import {nextTick} from 'q'
+import {PathName} from '../URL/PathName'
 
 const assert = require('assert')
 
@@ -26,14 +28,14 @@ export class TestUrlTemplateRegexpTest extends TestCase {
     )
   }
 
-  testTemplateToUrl() {
+  testTemplateToPathname() {
     const urlTemplate = 'page/{category}/{pageId}'
-    const url = UrlTemplateRegexp.UrlFromUrlTemplate(urlTemplate, {category: 'bobo', pageId: 7})
-    const expectedUrl = 'page/bobo/7'
+    const pathname = UrlTemplateRegexp.PathnameFromUrlTemplate(urlTemplate, {category: 'bobo', pageId: 7})
+    const expectedPathname = new PathName('page/bobo/7')
 
-    assert.strictEqual(
-      url,
-      expectedUrl,
+    assert.deepStrictEqual(
+      pathname,
+      expectedPathname,
       'should retrieve pathname with parameters'
     )
   }

@@ -8,7 +8,7 @@ export class PathNameParser {
    */
   constructor(pathName) {
     assert(pathName instanceof PathName,
-      'PathParser:constructor: `path` argument assert be a String, `%s` given',
+      'PathParser:constructor: `pathName` argument should be an instance of PathName, `%s` given',
       typeof pathName
     )
     /**
