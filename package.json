@@ -1,6 +1,6 @@
 {
   "name": "flexio-jsrouter",
-  "version": "1.0.0",
+  "version": "0.0.0-dev",
   "description": "Simple service router for hotballoon application",
   "module": "index.es.js",
   "repository": "git@github.com:flexiooss/flexio-jsrouter.git",
