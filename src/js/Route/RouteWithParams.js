@@ -1,4 +1,4 @@
-import {isObject, assert, isNull} from 'flexio-jshelpers'
+import {isObject, assert, isNull} from '@flexio-oss/assert'
 import {Route} from './Route'
 
 export class RouteWithParams {

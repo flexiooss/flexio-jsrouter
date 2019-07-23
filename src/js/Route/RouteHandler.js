@@ -1,8 +1,8 @@
-import {assert} from 'flexio-jshelpers'
+import {assert} from '@flexio-oss/assert'
 import {Route} from './Route'
 import {RouteCompiled} from './RouteCompiled'
 import {UrlTemplateRegexp} from '../TemplateUrl/UrlTemplateRegexp'
-import {RouteNotFoundException} from '../../RouteNotFoundException'
+import {RouteNotFoundException} from '../../../RouteNotFoundException'
 import {PathNameParser} from '../PathNameParser'
 import {RouteWithParams} from './RouteWithParams'
 

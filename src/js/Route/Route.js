@@ -1,4 +1,4 @@
-import {isFunction, isString, assert} from 'flexio-jshelpers'
+import {isFunction, isString, assert} from '@flexio-oss/assert'
 
 export class Route {
   /**

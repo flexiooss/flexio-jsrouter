@@ -1,4 +1,4 @@
-import {assert} from 'flexio-jshelpers'
+import {assert} from '@flexio-oss/assert'
 import {PathName} from './URL/PathName'
 
 export class PathNameParser {

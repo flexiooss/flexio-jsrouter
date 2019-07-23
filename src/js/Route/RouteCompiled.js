@@ -1,4 +1,4 @@
-import {isRegex, assert} from 'flexio-jshelpers'
+import {isRegex, assert} from '@flexio-oss/assert'
 import {Route} from './Route'
 
 export class RouteCompiled {

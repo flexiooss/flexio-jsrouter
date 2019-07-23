@@ -1,11 +1,11 @@
 /* global runTest */
 import {TestCase} from 'code-altimeter-js'
-import {RouterBuilder} from '../RouterBuilder'
-import {Route} from '../Route/Route'
-import {RouteWithParams} from '../Route/RouteWithParams'
-import {PublicRouteHandler} from '../Route/PublicRouteHandler'
-import {UrlConfiguration} from '../UrlConfiguration'
-import {PathName} from '../URL/PathName'
+import {RouterBuilder} from '../js/RouterBuilder'
+import {Route} from '../js/Route/Route'
+import {RouteWithParams} from '../js/Route/RouteWithParams'
+import {PublicRouteHandler} from '../js/Route/PublicRouteHandler'
+import {UrlConfiguration} from '../js/UrlConfiguration'
+import {PathName} from '../js/URL/PathName'
 
 const assert = require('assert')
 /**
@@ -162,4 +162,4 @@ export class TestRouterTest extends TestCase {
   }
 }
 
-runTest(TestRouterTest)
+// runTest(TestRouterTest)

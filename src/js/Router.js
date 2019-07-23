@@ -1,7 +1,7 @@
 import {PathNameParser} from './PathNameParser'
 import {URLHandler} from './URL/URLHandler'
 import {BrowserLocation} from './BrowserLocation'
-import {assert} from 'flexio-jshelpers'
+import {assert} from '@flexio-oss/assert'
 import {UrlConfiguration} from './UrlConfiguration'
 
 /**
