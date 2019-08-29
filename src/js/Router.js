@@ -104,7 +104,7 @@ export class Router {
    * @param {string} name
    * @param {Object} routeParameters
    * @param {?PartialUrl} partialUrl
-   * @return {URL}
+   * @return {URLExtended}
    */
   urlByRouteName(name, routeParameters, partialUrl) {
     // TODO handle partialUrl

@@ -2,10 +2,10 @@
 import {TestCase} from 'code-altimeter-js'
 import {RouterBuilder} from '../js/RouterBuilder'
 import {Route} from '../js/Route/Route'
-import {RouteWithParams} from '../js/Route/RouteWithParams'
 import {PublicRouteHandler} from '../js/Route/PublicRouteHandler'
 import {UrlConfiguration} from '../js/UrlConfiguration'
 import {PathName} from '../js/URL/PathName'
+
 
 const assert = require('assert')
 /**
@@ -94,7 +94,7 @@ export class TestRouterTest extends TestCase {
       .addRoute(yetAnOtherRoute)
 
     const url = this.publicRouteHandler.url('firstRoute', {pageName: 'bibi', pageId: 5})
-    const expectedUrl = new URL('firstRoute/bibi/5', 'https://localhost:8080')
+    const expectedUrl = new URLExtended('firstRoute/bibi/5', 'https://localhost:8080')
 
     assert.deepStrictEqual(url, expectedUrl, 'should retrieve Url from name with params')
   }

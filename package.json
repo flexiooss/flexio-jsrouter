@@ -1,21 +1,25 @@
 {
-  "name": "@flexio-oss/js-router",
-  "version": "0.0.0-dev",
+  "name": "flexio-jsrouter",
+  "version": "1.0.0",
   "description": "Simple service router for hotballoon application",
-  "main": "index.js",
+  "module": "index.es.js",
   "repository": "git@github.com:flexiooss/flexio-jsrouter.git",
   "author": "Thomas Chatelain (https://github.com/TomAchT)",
   "license": "Apache-2.0",
   "dependencies": {
-    "@flexio-oss/assert": "0.0.0",
-    "@flexio-oss/extended-flex-types": "0.1.0",
-    "@flexio-oss/js-helpers": "0.0.0",
-    "@flexio-oss/js-type-helpers": "0.0.0"
+    "flexio-jshelpers": "https://github.com/flexiooss/flexio-jshelpers.git",
+    "@flexio-oss/extended-flex-types": "0.2.0"
   },
   "devDependencies": {
+    "code-altimeter-js": "https://github.com/flexiooss/code-altimeter-js.git",
     "eslint": "^5.13.0",
+    "eslint-config-standard": "^11.0.0-beta.0",
+    "eslint-friendly-formatter": "^3.0.0",
     "eslint-plugin-html": "^4.0.1",
-    "code-altimeter-js": "https://github.com/flexiooss/code-altimeter-js.git"
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1"
   },
   "hotballoon-shed": {
     "build": {
