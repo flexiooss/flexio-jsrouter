@@ -37,12 +37,7 @@ export class Router {
      * @private
      */
     this._urlHandler = new URLHandler(this._urlConfiguration)
-    /**
-     *
-     * @type {BrowserLocation}
-     * @private
-     */
-    this._browserLocation = new BrowserLocation()
+
     this._PathParser = PathNameParser
   }
 
@@ -62,13 +57,6 @@ export class Router {
     return this._urlHandler
   }
 
-  /**
-   *
-   * @return {BrowserLocation}
-   */
-  get browserLocation() {
-    return this._browserLocation
-  }
 
   /**
    *
@@ -104,7 +92,7 @@ export class Router {
    * @param {string} name
    * @param {Object} routeParameters
    * @param {?PartialUrl} partialUrl
-   * @return {URLExtended}
+   * @return {FlexUrl}
    */
   urlByRouteName(name, routeParameters, partialUrl) {
     // TODO handle partialUrl

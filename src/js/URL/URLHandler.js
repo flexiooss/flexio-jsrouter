@@ -7,6 +7,11 @@ export class URLHandler {
    * @param {UrlConfiguration} urlConfiguration
    */
   constructor(urlConfiguration) {
+    /**
+     *
+     * @type {UrlConfiguration}
+     * @private
+     */
     this.__urlConfiguration = urlConfiguration
   }
 

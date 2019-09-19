@@ -1,4 +1,4 @@
-import {isObject, assert, isNull} from '@flexio-oss/assert'
+import {isObject, assertType, isNull} from '@flexio-oss/assert'
 import {Route} from './Route'
 
 export class RouteWithParams {
@@ -8,15 +8,25 @@ export class RouteWithParams {
    * @param {?Object} params
    */
   constructor(route, params) {
-    assert(
+    assertType(
       route instanceof Route,
-      'Route `name` argument should be a string'
+      'RouteWithParams `route` argument should be a Route'
     )
-    assert(
+    assertType(
       isObject(params) || isNull(params),
-      'Route `regexp` argument should be a string'
+      'RouteWithParams `params` argument should be an Object or null'
     )
+    /**
+     *
+     * @type {Route}
+     * @protected
+     */
     this._route = route
+    /**
+     *
+     * @type {?Object}
+     * @protected
+     */
     this._params = params
   }
 

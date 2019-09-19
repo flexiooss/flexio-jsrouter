@@ -1,4 +1,4 @@
-import {isRegex, assert} from '@flexio-oss/assert'
+import {isRegex, assertType} from '@flexio-oss/assert'
 import {Route} from './Route'
 
 export class RouteCompiled {
@@ -8,11 +8,11 @@ export class RouteCompiled {
    * @param {RegExp} regexp
    */
   constructor(route, regexp) {
-    assert(
+    assertType(
       route instanceof Route,
       'RouteCompiled `route` argument should be an instance of Route'
     )
-    assert(
+    assertType(
       isRegex(regexp),
       'RouteCompiled `regexp` argument should be a regexp'
     )

@@ -1,4 +1,4 @@
-import {assert} from '@flexio-oss/assert'
+import {assert, assertType} from '@flexio-oss/assert'
 import {Route} from './Route'
 import {RouteCompiled} from './RouteCompiled'
 import {UrlTemplateRegexp} from '../TemplateUrl/UrlTemplateRegexp'
@@ -34,12 +34,12 @@ export class RouteHandler {
    * @return {RouteHandler}
    */
   addRoute(route) {
-    assert(route instanceof Route,
-      'flexio-jsrouter:RoutesHandler:addRoute : `route` argument should be an instance of Route')
+    assertType(route instanceof Route,
+      'j-srouter:RoutesHandler:addRoute : `route` argument should be an instance of Route')
 
     assert(
       !this.__routes.has(route.name),
-      'flexio-jsrouter:RoutesHandler:addRoute: route name `%s`  already exists',
+      'js-router:RoutesHandler:addRoute: route name `%s`  already exists',
       route.name
     )
     return this.__registerRoute(route)
@@ -54,7 +54,10 @@ export class RouteHandler {
   __registerRoute(route) {
     this.__routes.set(
       route.name,
-      new RouteCompiled(route, UrlTemplateRegexp.regexpFromUrlTemplate(route.urlTemplate))
+      new RouteCompiled(
+        route,
+        UrlTemplateRegexp.regexpFromUrlTemplate(route.urlTemplate)
+      )
     )
     return this
   }
@@ -97,11 +100,12 @@ export class RouteHandler {
    * @throws {RouteNotFoundException}
    */
   routeByPathname(pathname) {
-    var route = null
-    var params = null
-    var isFound = false
+    let route = null
+    let params = null
+    let isFound = false
 
     this.__routes.forEach((routeCompiled) => {
+
       let matches = new PathNameParser(pathname).execWith(routeCompiled.regexp)
 
       if (isFound === false && matches !== null) {
@@ -114,6 +118,7 @@ export class RouteHandler {
     if (!isFound) {
       throw new RouteNotFoundException(pathname, 'Route not found with pathname : ' + pathname)
     }
+
     return new RouteWithParams(route, params)
   }
 
@@ -124,10 +129,16 @@ export class RouteHandler {
    * @return {PathName}
    */
   pathnameByRouteName(name, routeParameters) {
+
     if (!this.__routes.has(name)) {
       throw new RouteNotFoundException(name, 'Route not found with name : ' + name)
     }
+
     const routeCompiled = this.__routes.get(name)
-    return UrlTemplateRegexp.PathnameFromUrlTemplate(routeCompiled.route.urlTemplate, routeParameters)
+
+    return UrlTemplateRegexp.PathnameFromUrlTemplate(
+      routeCompiled.route.urlTemplate,
+      routeParameters
+    )
   }
 }

@@ -1,36 +1,34 @@
-import {isFunction, isString, assert} from '@flexio-oss/assert'
+import {isFunction, isString, assertType} from '@flexio-oss/assert'
 
 export class Route {
   /**
    *
    * @param {string} name
    * @param {string} urlTemplate : page/{myProperty}/{myOtherProperty}
-   * @param {Function} builder
-   * @param {Function} callback
+   * @param {Route~clb} callback
    */
-  constructor(name, urlTemplate, builder, callback) {
-    assert(
+  constructor(name, urlTemplate, callback) {
+    assertType(
       isString(name),
       'Route `name` argument should be a string'
     )
-    assert(
+    assertType(
       isString(urlTemplate),
       'Route `urlTemplate` argument should be a string'
     )
-
-    assert(
-      isFunction(builder),
-      'Route `builder` argument should be a Function'
-    )
-    assert(
+    assertType(
       isFunction(callback),
       'Route `callback` argument should be a Function'
     )
     this._name = name
     this._urlTemplate = urlTemplate
-    this._builder = builder
     this._callback = callback
   }
+
+  /**
+   * @callback Route~clb
+   * @param {RouteWithParams} routeWithParams
+   */
 
   /**
    *
@@ -50,17 +48,9 @@ export class Route {
 
   /**
    *
-   * @return {Function}
+   * @param {RouteWithParams} routeWithParams
    */
-  get builder() {
-    return this._builder
-  }
-
-  /**
-   *
-   * @return {Function}
-   */
-  get callback() {
-    return this._callback
+  callback(routeWithParams) {
+    return this._callback(routeWithParams)
   }
 }

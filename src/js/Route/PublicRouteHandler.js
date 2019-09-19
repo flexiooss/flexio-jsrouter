@@ -49,7 +49,7 @@ export class PublicRouteHandler {
    * @param {string} name
    * @param {Object} routeParameters
    * @param {?PartialUrl} partialUrl
-   * @return {URLExtended}
+   * @return {FlexUrl}
    */
   url(name, routeParameters, partialUrl = null) {
     return this[__router].urlByRouteName(name, routeParameters, partialUrl)

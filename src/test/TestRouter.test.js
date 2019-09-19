@@ -5,20 +5,13 @@ import {Route} from '../js/Route/Route'
 import {PublicRouteHandler} from '../js/Route/PublicRouteHandler'
 import {UrlConfiguration} from '../js/UrlConfiguration'
 import {PathName} from '../js/URL/PathName'
-
+import {URLExtended} from '@flexio-oss/extended-flex-types'
 
 const assert = require('assert')
-/**
- *
- * @param {Object} obj
- * @return {Object}
- */
-const builder = obj => Object.assign({}, obj)
 
 const firstRoute = new Route(
   'firstRoute',
   'firstRoute/{pageName}/{pageId}',
-  builder,
   (params) => {
     console.log(params)
   }
@@ -27,7 +20,6 @@ const firstRoute = new Route(
 const otherRoute = new Route(
   'otherRoute',
   'otherRoute/{pageName}/{pageId}',
-  builder,
   (params) => {
     console.log(params)
   }
@@ -36,7 +28,6 @@ const otherRoute = new Route(
 const yetAnOtherRoute = new Route(
   'yetAnOtherRoute',
   'yetAnOtherRoute/{pageName}/{pageId}',
-  builder,
   (params) => {
     console.log(params)
   }
@@ -59,7 +50,6 @@ export class TestRouterTest extends TestCase {
     const routeWithSameName = this.publicRouteHandler.buildRoute(
       'firstRoute',
       'routeWithSameName/{pageName}/{pageId}',
-      builder,
       (params) => {
         console.log(params)
       }
@@ -112,11 +102,7 @@ export class TestRouterTest extends TestCase {
       {pageName: 'bibi', pageId: '5'},
       'route params prototype should be null'
     )
-    assert.deepStrictEqual(routeWithParams.route.builder(routeWithParams.params),
-      {pageName: 'bibi', pageId: '5'},
-      'route builder should be invoked'
-    )
-  }
+      }
 
   testInvokeCallback() {
     let martyr1 = false
@@ -124,7 +110,6 @@ export class TestRouterTest extends TestCase {
     const routeWithCallback = new Route(
       'routeWithCallback',
       'routeWithCallback/{pageName}/{pageId}',
-      builder,
       (params) => {
         martyr1 = true
         console.log('testInvokeCallback payload : ')
@@ -143,7 +128,7 @@ export class TestRouterTest extends TestCase {
     const routeWithParams = this.router.routeByPathname(routePathname)
 
     routeWithParams.route.callback(
-      routeWithParams.route.builder(routeWithParams.params)
+      routeWithParams
     )
 
     assert.ok(martyr1, 'route test callback should be invoked')
