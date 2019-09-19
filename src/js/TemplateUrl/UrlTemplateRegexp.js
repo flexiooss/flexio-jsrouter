@@ -1,5 +1,6 @@
 import {PathName} from '../URL/PathName'
 
+const START_RE = '^/?'
 const PARAMETER_RE = '[^/]+'
 const PARAMETER_TEMPLATE_RE_IN = '\{'
 const PARAMETER_TEMPLATE_RE_OUT = '\}'
@@ -40,19 +41,27 @@ export class UrlTemplateRegexp {
    * @private
    */
   __templateToRegexp(urlTemplate) {
-    var matches
+
     const re = this.__getCompiledRegexp(PARAMETER_TEMPLATE_RE)
-    var stringRe = urlTemplate
+    let matches
+    let stringRe = urlTemplate
+
     do {
       matches = re.exec(urlTemplate)
+
       if (matches) {
+
         stringRe = stringRe.replace(
           this.__getCompiledRegexp(this.__searchTemplateParam(matches[1])),
           this.__namedGroup(matches[1])
         )
       }
+
     } while (matches)
-    return new RegExp(this.__addBeginRegexp(this.__addTraillingSlashesRegex(stringRe)))
+
+    return new RegExp(
+      this.__addBeginRegexp(this.__addTraillingSlashesRegex(stringRe))
+    )
   }
 
   /**
@@ -63,16 +72,20 @@ export class UrlTemplateRegexp {
    * @private
    */
   __getCompiledRegexp(stringRegexp, resetIndex = true) {
+
     if (!__memoizeRegexp.has(stringRegexp)) {
       __memoizeRegexp.set(
         stringRegexp,
         new RegExp(stringRegexp, 'gi')
       )
     }
+
     const re = __memoizeRegexp.get(stringRegexp)
+
     if (resetIndex === true) {
       re.lastIndex = 0
     }
+
     return re
   }
 
@@ -103,7 +116,7 @@ export class UrlTemplateRegexp {
    * @private
    */
   __addBeginRegexp(stringRe) {
-    return '^' + stringRe
+    return START_RE + stringRe
   }
 
   /**
@@ -123,18 +136,22 @@ export class UrlTemplateRegexp {
    * @return {PathName}
    */
   __templateToPathname(urlTemplate, routeParameter) {
-    var matches
     const re = this.__getCompiledRegexp(PARAMETER_TEMPLATE_RE)
-    var pathname = urlTemplate
+    let matches
+    let pathname = urlTemplate
+
     do {
       matches = re.exec(urlTemplate)
+
       if (matches) {
         pathname = pathname.replace(
           this.__getCompiledRegexp(this.__searchTemplateParam(matches[1])),
           this.__getValueByKey(matches[1], routeParameter)
         )
       }
+
     } while (matches)
+
     return new PathName(pathname)
   }
 

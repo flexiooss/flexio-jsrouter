@@ -22,6 +22,14 @@ export class RouteHandler {
 
   /**
    *
+   * @return {Route.}
+   */
+  routeBuilder() {
+    return Route
+  }
+
+  /**
+   *
    * @return {Map<string, RouteCompiled>}
    */
   get routes() {
@@ -35,7 +43,7 @@ export class RouteHandler {
    */
   addRoute(route) {
     assertType(route instanceof Route,
-      'j-srouter:RoutesHandler:addRoute : `route` argument should be an instance of Route')
+      'js-srouter:RoutesHandler:addRoute : `route` argument should be an instance of Route')
 
     assert(
       !this.__routes.has(route.name),
@@ -110,7 +118,7 @@ export class RouteHandler {
 
       if (isFound === false && matches !== null) {
         route = routeCompiled.route
-        params = matches.groups
+        params = Object.assign({}, matches.groups)
         isFound = true
       }
     })

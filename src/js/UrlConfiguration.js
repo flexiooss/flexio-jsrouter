@@ -1,3 +1,5 @@
+import {isString, isNull, assertType} from '@flexio-oss/assert'
+
 export class UrlConfiguration {
   /**
    *
@@ -6,18 +8,32 @@ export class UrlConfiguration {
    * @param {?string} port
    */
   constructor(protocol = null, hostname = null, port = null) {
+    assertType(
+      isString(protocol) || isNull(protocol),
+      'UrlConfiguration `protocol` argument should be a string or null'
+    )
     /**
      *
      * @type {?string}
      * @private
      */
     this.__protocol = protocol
+
+    assertType(
+      isString(hostname) || isNull(hostname),
+      'UrlConfiguration `hostname` argument should be a string or null'
+    )
     /**
      *
      * @type {?string}
      * @private
      */
     this.__hostname = hostname
+
+    assertType(
+      isString(port) || isNull(port),
+      'UrlConfiguration `port` argument should be a string or null'
+    )
     /**
      *
      * @type {?string}

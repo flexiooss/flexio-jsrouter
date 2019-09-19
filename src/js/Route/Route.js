@@ -4,10 +4,10 @@ export class Route {
   /**
    *
    * @param {string} name
-   * @param {string} urlTemplate : page/{myProperty}/{myOtherProperty}
-   * @param {Route~clb} callback
+   * @param {string} urlTemplate - page/{myProperty}/{myOtherProperty}
+   * @private
    */
-  constructor(name, urlTemplate, callback) {
+  constructor(name, urlTemplate) {
     assertType(
       isString(name),
       'Route `name` argument should be a string'
@@ -16,13 +16,31 @@ export class Route {
       isString(urlTemplate),
       'Route `urlTemplate` argument should be a string'
     )
-    assertType(
-      isFunction(callback),
-      'Route `callback` argument should be a Function'
-    )
+
+    /**
+     *
+     * @type {string}
+     * @protected
+     */
     this._name = name
+    /**
+     *
+     * @type {string}
+     * @protected
+     */
     this._urlTemplate = urlTemplate
-    this._callback = callback
+
+  }
+
+  /**
+   *
+   * @param {string} name
+   * @param {string} urlTemplate - page/{myProperty}/{myOtherProperty}
+   * @return {Route}
+   * @static
+   */
+  static build(name, urlTemplate) {
+    return new Route(name, urlTemplate)
   }
 
   /**
@@ -44,13 +62,5 @@ export class Route {
    */
   get urlTemplate() {
     return this._urlTemplate
-  }
-
-  /**
-   *
-   * @param {RouteWithParams} routeWithParams
-   */
-  callback(routeWithParams) {
-    return this._callback(routeWithParams)
   }
 }

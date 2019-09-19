@@ -1,8 +1,7 @@
-import {PathNameParser} from './PathNameParser'
 import {URLHandler} from './URL/URLHandler'
-import {BrowserLocation} from './BrowserLocation'
 import {assert} from '@flexio-oss/assert'
 import {UrlConfiguration} from './UrlConfiguration'
+import {PathName} from './URL/PathName'
 
 /**
  *
@@ -38,7 +37,14 @@ export class Router {
      */
     this._urlHandler = new URLHandler(this._urlConfiguration)
 
-    this._PathParser = PathNameParser
+  }
+
+  /**
+   *
+   * @return {Route.}
+   */
+  routeBuilder() {
+    return this._routesHandler.routeBuilder()
   }
 
   /**
@@ -56,7 +62,6 @@ export class Router {
   get urlHandler() {
     return this._urlHandler
   }
-
 
   /**
    *
@@ -91,10 +96,9 @@ export class Router {
    *
    * @param {string} name
    * @param {Object} routeParameters
-   * @param {?PartialUrl} partialUrl
-   * @return {FlexUrl}
+   * @return {URLExtended}
    */
-  urlByRouteName(name, routeParameters, partialUrl) {
+  urlByRouteName(name, routeParameters) {
     // TODO handle partialUrl
     return this.urlHandler.pathnameToUrl(
       this._routesHandler.pathnameByRouteName(
@@ -105,11 +109,11 @@ export class Router {
 
   /**
    *
-   * @param {PathName} pathname
+   * @param {string} pathname
    * @return {RouteWithParams}
    * @throws {RouteNotFoundException}
    */
   routeByPathname(pathname) {
-    return this._routesHandler.routeByPathname(pathname)
+    return this._routesHandler.routeByPathname(new PathName(pathname))
   }
 }

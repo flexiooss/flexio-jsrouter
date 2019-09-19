@@ -11,6 +11,7 @@ export class RouterBuilder {
   static build(urlConfiguration) {
     return new Router(
       urlConfiguration,
-      new RouteHandler())
+      new RouteHandler()
+    )
   }
 }

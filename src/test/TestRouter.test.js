@@ -2,35 +2,25 @@
 import {TestCase} from 'code-altimeter-js'
 import {RouterBuilder} from '../js/RouterBuilder'
 import {Route} from '../js/Route/Route'
-import {PublicRouteHandler} from '../js/Route/PublicRouteHandler'
 import {UrlConfiguration} from '../js/UrlConfiguration'
 import {PathName} from '../js/URL/PathName'
 import {URLExtended} from '@flexio-oss/extended-flex-types'
 
 const assert = require('assert')
 
-const firstRoute = new Route(
+const firstRoute = Route.build(
   'firstRoute',
-  'firstRoute/{pageName}/{pageId}',
-  (params) => {
-    console.log(params)
-  }
+  'firstRoute/{pageName}/{pageId}'
 )
 
-const otherRoute = new Route(
+const otherRoute = Route.build(
   'otherRoute',
-  'otherRoute/{pageName}/{pageId}',
-  (params) => {
-    console.log(params)
-  }
+  'otherRoute/{pageName}/{pageId}'
 )
 
-const yetAnOtherRoute = new Route(
+const yetAnOtherRoute = Route.build(
   'yetAnOtherRoute',
-  'yetAnOtherRoute/{pageName}/{pageId}',
-  (params) => {
-    console.log(params)
-  }
+  'yetAnOtherRoute/{pageName}/{pageId}'
 )
 
 /**
@@ -43,19 +33,15 @@ export class TestRouterTest extends TestCase {
       'localhost',
       '8080')
     )
-    this.publicRouteHandler = new PublicRouteHandler(this.router, Route)
   }
 
   testAddRoute() {
-    const routeWithSameName = this.publicRouteHandler.buildRoute(
+    const routeWithSameName = this.router.routeBuilder().build(
       'firstRoute',
-      'routeWithSameName/{pageName}/{pageId}',
-      (params) => {
-        console.log(params)
-      }
+      'routeWithSameName/{pageName}/{pageId}'
     )
 
-    this.publicRouteHandler.addRoute(firstRoute)
+    this.router.addRoute(firstRoute)
 
     assert.deepStrictEqual(
       this.router.route('firstRoute'),
@@ -64,13 +50,13 @@ export class TestRouterTest extends TestCase {
     )
 
     assert.throws(() => {
-      this.publicRouteHandler.addRoute(routeWithSameName)
+      this.router.addRoute(routeWithSameName)
     })
   }
 
   testRemoveRoute() {
-    this.publicRouteHandler.addRoute(firstRoute)
-    this.publicRouteHandler.removeRoute('firstRoute')
+    this.router.addRoute(firstRoute)
+    this.router.removeRoute('firstRoute')
 
     assert.throws(() => {
       this.router.route('firstRoute')
@@ -78,64 +64,44 @@ export class TestRouterTest extends TestCase {
   }
 
   testUrlByName() {
-    this.publicRouteHandler
+    this.router
       .addRoute(firstRoute)
       .addRoute(otherRoute)
       .addRoute(yetAnOtherRoute)
 
-    const url = this.publicRouteHandler.url('firstRoute', {pageName: 'bibi', pageId: 5})
+    const url = this.router.urlByRouteName('firstRoute', {pageName: 'bibi', pageId: 5})
     const expectedUrl = new URLExtended('firstRoute/bibi/5', 'https://localhost:8080')
 
     assert.deepStrictEqual(url, expectedUrl, 'should retrieve Url from name with params')
   }
 
-  testBuilder() {
-    this.publicRouteHandler
+  testParams() {
+    this.router
       .addRoute(firstRoute)
       .addRoute(otherRoute)
       .addRoute(yetAnOtherRoute)
 
-    const routePathname = new PathName('firstRoute/bibi/5')
-    const routeWithParams = this.router.routeByPathname(routePathname)
+    const routePathname1 = 'firstRoute/bibi/5'
 
-    assert.notDeepStrictEqual(routeWithParams.params,
-      {pageName: 'bibi', pageId: '5'},
-      'route params prototype should be null'
-    )
-      }
+    const routeWithParams1 = this.router.routeByPathname(routePathname1)
 
-  testInvokeCallback() {
-    let martyr1 = false
-
-    const routeWithCallback = new Route(
-      'routeWithCallback',
-      'routeWithCallback/{pageName}/{pageId}',
-      (params) => {
-        martyr1 = true
-        console.log('testInvokeCallback payload : ')
-        console.log(params)
-      }
+    assert.deepStrictEqual(routeWithParams1.params,
+      {pageName: 'bibi', pageId: '5'}
     )
 
-    this.publicRouteHandler
-      .addRoute(firstRoute)
-      .addRoute(otherRoute)
-      .addRoute(routeWithCallback)
-      .addRoute(yetAnOtherRoute)
+    const routePathname2 = (new URLExtended('firstRoute/bibi/5?toto=abc&truc=bof#42', 'https://localhost:8080')).pathname
 
-    const routePathname = new PathName('routeWithCallback/bibi/5')
+    const routeWithParams2 = this.router.routeByPathname(routePathname2)
 
-    const routeWithParams = this.router.routeByPathname(routePathname)
+    console.log(routeWithParams2)
 
-    routeWithParams.route.callback(
-      routeWithParams
+    assert.deepStrictEqual(routeWithParams2.params,
+      {pageName: 'bibi', pageId: '5'}
     )
-
-    assert.ok(martyr1, 'route test callback should be invoked')
   }
 
   testNotFound() {
-    this.publicRouteHandler
+    this.router
       .addRoute(firstRoute)
       .addRoute(otherRoute)
 
@@ -147,4 +113,4 @@ export class TestRouterTest extends TestCase {
   }
 }
 
-// runTest(TestRouterTest)
+runTest(TestRouterTest)
