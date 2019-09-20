@@ -1,10 +1,11 @@
 /* global runTest */
+import {URLExtended} from '@flexio-oss/extended-flex-types'
 import {TestCase} from 'code-altimeter-js'
 import {RouterBuilder} from '../js/RouterBuilder'
 import {Route} from '../js/Route/Route'
 import {UrlConfiguration} from '../js/UrlConfiguration'
 import {PathName} from '../js/URL/PathName'
-import {URLExtended} from '@flexio-oss/extended-flex-types'
+import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 
 const assert = require('assert')
 
@@ -64,13 +65,18 @@ export class TestRouterTest extends TestCase {
   }
 
   testUrlByName() {
+    console.log(globalFlexioImport.io.flexio)
+
     this.router
       .addRoute(firstRoute)
       .addRoute(otherRoute)
       .addRoute(yetAnOtherRoute)
 
     const url = this.router.urlByRouteName('firstRoute', {pageName: 'bibi', pageId: 5})
-    const expectedUrl = new URLExtended('firstRoute/bibi/5', 'https://localhost:8080')
+    const expectedUrl = new globalFlexioImport.io.flexio.extended_flex_types.types
+      .FlexUrlBuilder()
+      .value('https://localhost:8080/firstRoute/bibi/5')
+      .build()
 
     assert.deepStrictEqual(url, expectedUrl, 'should retrieve Url from name with params')
   }

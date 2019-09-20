@@ -96,7 +96,7 @@ export class Router {
    *
    * @param {string} name
    * @param {Object} routeParameters
-   * @return {URLExtended}
+   * @return {FlexUrl}
    */
   urlByRouteName(name, routeParameters) {
     // TODO handle partialUrl

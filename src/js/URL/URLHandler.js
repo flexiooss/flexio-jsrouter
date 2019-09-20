@@ -1,5 +1,6 @@
 import {PathName} from './PathName'
 import {URLExtended} from '@flexio-oss/extended-flex-types'
+import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 
 export class URLHandler {
   /**
@@ -38,9 +39,12 @@ export class URLHandler {
   /**
    *
    * @param {PathName} pathname
-   * @return {URLExtended}
+   * @return {FlexUrl}
    */
   pathnameToUrl(pathname) {
-    return new URLExtended(pathname.value, this.__urlConfiguration.origin())
+    return new globalFlexioImport.io.flexio.extended_flex_types.types
+      .FlexUrlBuilder()
+      .value(new URLExtended(pathname.value, this.__urlConfiguration.origin()).href)
+      .build()
   }
 }
