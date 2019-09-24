@@ -111,7 +111,7 @@ export class Router {
    *
    * @param {string} pathname
    * @return {RouteWithParams}
-   * @throws {RouteNotFoundException}
+   * @throws {RouteException}
    */
   routeByPathname(pathname) {
     return this._routesHandler.routeByPathname(new PathName(pathname))

@@ -2,9 +2,9 @@ import {assert, assertType} from '@flexio-oss/assert'
 import {Route} from './Route'
 import {RouteCompiled} from './RouteCompiled'
 import {UrlTemplateRegexp} from '../TemplateUrl/UrlTemplateRegexp'
-import {RouteNotFoundException} from '../../../RouteNotFoundException'
 import {PathNameParser} from '../PathNameParser'
 import {RouteWithParams} from './RouteWithParams'
+import {RouteException} from './RouteException'
 
 /**
  * @class RouteHandler
@@ -44,12 +44,13 @@ export class RouteHandler {
   addRoute(route) {
     assertType(route instanceof Route,
       'js-srouter:RoutesHandler:addRoute : `route` argument should be an instance of Route')
+    if (
 
-    assert(
-      !this.__routes.has(route.name),
-      'js-router:RoutesHandler:addRoute: route name `%s`  already exists',
-      route.name
-    )
+      this.__routes.has(route.name)
+    ) {
+      throw RouteException.ALREADY_EXISTS(route.name)
+    }
+
     return this.__registerRoute(route)
   }
 
@@ -93,10 +94,11 @@ export class RouteHandler {
    *
    * @param {string} name
    * @return {Route}
+   * @throws {RouteException}
    */
   route(name) {
     if (!this.hasRoute(name)) {
-      throw new RouteNotFoundException(name, 'Route not found with name : ' + name)
+      throw RouteException.NOT_FOUND(name)
     }
     return this.__routes.get(name).route
   }
@@ -105,7 +107,7 @@ export class RouteHandler {
    *
    * @param {PathName} pathname
    * @return {RouteWithParams}
-   * @throws {RouteNotFoundException}
+   * @throws {RouteException}
    */
   routeByPathname(pathname) {
     let route = null
@@ -124,7 +126,7 @@ export class RouteHandler {
     })
 
     if (!isFound) {
-      throw new RouteNotFoundException(pathname, 'Route not found with pathname : ' + pathname)
+      throw RouteException.NOT_FOUND(pathname.value)
     }
 
     return new RouteWithParams(route, params)
@@ -139,7 +141,7 @@ export class RouteHandler {
   pathnameByRouteName(name, routeParameters) {
 
     if (!this.__routes.has(name)) {
-      throw new RouteNotFoundException(name, 'Route not found with name : ' + name)
+      throw RouteException.NOT_FOUND(name)
     }
 
     const routeCompiled = this.__routes.get(name)
