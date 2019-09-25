@@ -1,7 +1,9 @@
 import {URLHandler} from './URL/URLHandler'
-import {assert} from '@flexio-oss/assert'
+import {assert, assertType} from '@flexio-oss/assert'
 import {UrlConfiguration} from './UrlConfiguration'
-import {PathName} from './URL/PathName'
+import {PathName, PathnameBuilder} from './URL/PathName'
+import {FlexUrl} from '@flexio-oss/extended-flex-types'
+import {URLExtended, URLExtendedBuilder} from '../../../extended-flex-types'
 
 /**
  *
@@ -99,9 +101,9 @@ export class Router {
    * @return {FlexUrl}
    */
   urlByRouteName(name, routeParameters) {
-    // TODO handle partialUrl
+
     return this.urlHandler.pathnameToUrl(
-      this._routesHandler.pathnameByRouteName(
+      this._routesHandler.urlByRouteName(
         name,
         routeParameters)
     )
@@ -109,11 +111,16 @@ export class Router {
 
   /**
    *
-   * @param {string} pathname
+   * @param {FlexUrl} url
    * @return {RouteWithParams}
    * @throws {RouteException}
    */
-  routeByPathname(pathname) {
-    return this._routesHandler.routeByPathname(new PathName(pathname))
+  routeByUrl(url) {
+    return this._routesHandler
+      .routeByPathname(
+        PathnameBuilder
+          .fromFlexUrl(url)
+          .build()
+      )
   }
 }
