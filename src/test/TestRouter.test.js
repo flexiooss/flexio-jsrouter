@@ -1,12 +1,11 @@
 /* global runTest */
-import {URLExtended, FlexUrlBuilder} from '@flexio-oss/extended-flex-types'
+import {URLExtended} from '@flexio-oss/extended-flex-types'
 import {TestCase} from 'code-altimeter-js'
 import {RouterBuilder} from '../js/RouterBuilder'
 import {Route} from '../js/Route/Route'
 import {UrlConfiguration} from '../js/UrlConfiguration'
 import {Pathname} from '../js/URL/Pathname'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
-import {FlexUrl} from '../../../extended-flex-types'
 
 const assert = require('assert')
 
