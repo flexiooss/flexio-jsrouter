@@ -1,6 +1,7 @@
 import {assertType, isNull, isString} from '@flexio-oss/assert'
 import {deepFreezeSeal} from '@flexio-oss/js-generator-helpers'
 import {FlexUrl, URLExtendedBuilder} from '@flexio-oss/extended-flex-types'
+import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 
 class Pathname {
 
@@ -106,12 +107,12 @@ class PathnameBuilder {
   }
 
   /**
-   * @param {typeof URL} url
+   * @param {URL} url
    * @returns {PathnameBuilder}
    */
   static fromURL(url) {
     if (!isNull(url)) {
-      assertType(url instanceof URL, 'value should be a URL')
+      assertType(url instanceof URL, 'PathnameBuilder:fromURL: `value` should be a URL')
     }
     let builder = new PathnameBuilder()
     builder.value(url.pathname)
@@ -124,10 +125,11 @@ class PathnameBuilder {
    */
   static fromFlexUrl(url) {
     if (!isNull(url)) {
-      assertType(url instanceof FlexUrl, 'value should be a FlexUrl')
+      assertType(url instanceof globalFlexioImport.io.flexio.extended_flex_types.FlexUrl, 'PathnameBuilder:fromFlexUrl: `value` should be a FlexUrl')
     }
+
     return PathnameBuilder.fromURL(
-      URLExtendedBuilder.fromFlexUrl(url)
+      URLExtendedBuilder.fromFlexUrl(url).build()
     )
   }
 }

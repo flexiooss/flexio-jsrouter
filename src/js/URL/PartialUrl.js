@@ -1,4 +1,4 @@
-import {PathName} from './PathName'
+import {PathnameBuilder} from './Pathname'
 import {Hash} from './Hash'
 import {SearchParams} from './SearchParams'
 
@@ -6,10 +6,10 @@ export class PartialUrl {
   constructor() {
     /**
      *
-     * @type {PathName}
+     * @type {Pathname}
      * @private
      */
-    this.__pathname = new PathName()
+    this.__pathname = new PathnameBuilder().build()
     /**
      *
      * @type {Hash}
@@ -26,7 +26,7 @@ export class PartialUrl {
 
   /**
    *
-   * @return {PathName}
+   * @return {Pathname}
    */
   get pathname() {
     return this.__pathname
@@ -50,11 +50,13 @@ export class PartialUrl {
 
   /**
    *
-   * @param {string} pathName
+   * @param {string} pathname
    * @return {PartialUrl}
    */
-  withPathName(pathName) {
-    this.__pathname = new PathName(pathName)
+  withPathname(pathname) {
+    this.__pathname = new PathnameBuilder()
+      .value(pathname)
+      .build()
     return this
   }
 

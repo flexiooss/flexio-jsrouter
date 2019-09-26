@@ -1,7 +1,7 @@
 import {URLHandler} from './URL/URLHandler'
 import {assert, assertType} from '@flexio-oss/assert'
 import {UrlConfiguration} from './UrlConfiguration'
-import {PathName, PathnameBuilder} from './URL/PathName'
+import {Pathname, PathnameBuilder} from './URL/Pathname'
 import {FlexUrl} from '@flexio-oss/extended-flex-types'
 import {URLExtended, URLExtendedBuilder} from '../../../extended-flex-types'
 
@@ -101,11 +101,11 @@ export class Router {
    * @return {FlexUrl}
    */
   urlByRouteName(name, routeParameters) {
-
     return this.urlHandler.pathnameToUrl(
-      this._routesHandler.urlByRouteName(
+      this._routesHandler.pathnameByRouteName(
         name,
-        routeParameters)
+        routeParameters
+      )
     )
   }
 

@@ -2,7 +2,7 @@ import {assert, assertType} from '@flexio-oss/assert'
 import {Route} from './Route'
 import {RouteCompiled} from './RouteCompiled'
 import {UrlTemplateRegexp} from '../TemplateUrl/UrlTemplateRegexp'
-import {PathNameParser} from '../PathNameParser'
+import {PathnameParser} from '../PathnameParser'
 import {RouteWithParams} from './RouteWithParams'
 import {RouteException} from './RouteException'
 
@@ -105,7 +105,7 @@ export class RouteHandler {
 
   /**
    *
-   * @param {PathName} pathname
+   * @param {Pathname} pathname
    * @return {RouteWithParams}
    * @throws {RouteException}
    */
@@ -116,7 +116,7 @@ export class RouteHandler {
 
     this.__routes.forEach((routeCompiled) => {
 
-      let matches = new PathNameParser(pathname).execWith(routeCompiled.regexp)
+      let matches = new PathnameParser(pathname).execWith(routeCompiled.regexp)
 
       if (isFound === false && matches !== null) {
         route = routeCompiled.route
@@ -126,7 +126,7 @@ export class RouteHandler {
     })
 
     if (!isFound) {
-      throw RouteException.NOT_FOUND(pathname.value)
+      throw RouteException.NOT_FOUND(pathname.value())
     }
 
     return new RouteWithParams(route, params)
@@ -136,7 +136,7 @@ export class RouteHandler {
    *
    * @param {string} name
    * @param {Object} routeParameters
-   * @return {PathName}
+   * @return {Pathname}
    */
   pathnameByRouteName(name, routeParameters) {
 
@@ -146,9 +146,10 @@ export class RouteHandler {
 
     const routeCompiled = this.__routes.get(name)
 
-    return UrlTemplateRegexp.PathnameFromUrlTemplate(
-      routeCompiled.route.urlTemplate,
-      routeParameters
-    )
+    return UrlTemplateRegexp
+      .pathnameFromUrlTemplate(
+        routeCompiled.route.urlTemplate,
+        routeParameters
+      )
   }
 }
