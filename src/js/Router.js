@@ -1,9 +1,8 @@
 import {URLHandler} from './URL/URLHandler'
-import {assert, assertType} from '@flexio-oss/assert'
-import {UrlConfiguration} from './UrlConfiguration'
-import {Pathname, PathnameBuilder} from './URL/Pathname'
+import {assertType} from '@flexio-oss/assert'
+import {PathnameBuilder} from './URL/Pathname'
 import {FlexUrl} from '@flexio-oss/extended-flex-types'
-import {URLExtended, URLExtendedBuilder} from '../../../extended-flex-types'
+import {TypeCheck} from './TypeCheck'
 
 /**
  *
@@ -16,9 +15,13 @@ export class Router {
    * @param {RouteHandler} routesHandler
    */
   constructor(urlConfiguration, routesHandler) {
-    assert(
-      urlConfiguration instanceof UrlConfiguration,
+    assertType(
+      TypeCheck.isUrlConfiguration(urlConfiguration),
       'Router: `urlConfiguration` argument should be an instance of UrlConfiguration'
+    )
+    assertType(
+      TypeCheck.isRouteHandler(routesHandler),
+      'Router: `routesHandler` argument should be an instance of RoutesHandler'
     )
     /**
      *

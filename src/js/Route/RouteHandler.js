@@ -1,4 +1,4 @@
-import {assert, assertType} from '@flexio-oss/assert'
+import {assertType} from '@flexio-oss/assert'
 import {Route} from './Route'
 import {RouteCompiled} from './RouteCompiled'
 import {UrlTemplateRegexp} from '../TemplateUrl/UrlTemplateRegexp'
@@ -6,9 +6,7 @@ import {PathnameParser} from '../PathnameParser'
 import {RouteWithParams} from './RouteWithParams'
 import {RouteException} from './RouteException'
 
-/**
- * @class RouteHandler
- */
+
 export class RouteHandler {
   constructor() {
     /**

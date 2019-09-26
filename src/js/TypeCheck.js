@@ -1,6 +1,7 @@
 import {Router} from './Router'
 import {UrlConfiguration} from './UrlConfiguration'
 import {ALREADY_EXISTS, NOT_FOUND, RouteException} from './Route/RouteException'
+import {RouteHandler} from './Route/RouteHandler'
 
 export class TypeCheck {
   /**
@@ -46,6 +47,15 @@ export class TypeCheck {
    */
   static isRouteExceptionAlreadyExists(instance) {
     return TypeCheck.isRouteException(instance) && instance.code === ALREADY_EXISTS
+  }
+
+  /**
+   *
+   * @param {*} instance
+   * @return {boolean}
+   */
+  static isRouteHandler(instance) {
+    return instance instanceof RouteHandler
   }
 
 }
