@@ -71,7 +71,7 @@ export class UrlConfiguration {
    * @return {string}
    */
   host() {
-    return `${this.__hostname}${(this.__port !== null || this.__port !== '') ? ':' + this.__port : ''}`
+    return `${this.__hostname}${(this.__port !== null && this.__port !== '') ? ':' + this.__port : ''}`
   }
 
   /**
