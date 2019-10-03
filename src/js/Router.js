@@ -46,7 +46,7 @@ export class Router {
 
   /**
    *
-   * @return {Route.}
+   * @return {RouteBuilder}
    */
   routeBuilder() {
     return this._routesHandler.routeBuilder()

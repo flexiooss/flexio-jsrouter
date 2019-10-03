@@ -19,6 +19,11 @@
     "test": {
       "tester": "code-altimeter-js",
       "path": "src/test"
+    },
+    "generate-sources": {
+      "value-objects": {
+        "extension": ".spec"
+      }
     }
   }
 }

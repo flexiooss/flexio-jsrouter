@@ -1,11 +1,10 @@
 import {assertType} from '@flexio-oss/assert'
-import {Route} from './Route'
 import {RouteCompiled} from './RouteCompiled'
 import {UrlTemplateRegexp} from '../TemplateUrl/UrlTemplateRegexp'
 import {PathnameParser} from '../PathnameParser'
-import {RouteWithParams} from './RouteWithParams'
 import {RouteException} from './RouteException'
-
+import {TypeCheck} from '../TypeCheck'
+import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 
 export class RouteHandler {
   constructor() {
@@ -20,10 +19,10 @@ export class RouteHandler {
 
   /**
    *
-   * @return {Route.}
+   * @return {RouteBuilder}
    */
   routeBuilder() {
-    return Route
+    return new globalFlexioImport.io.flexio.js_router.types.RouteBuilder()
   }
 
   /**
@@ -40,13 +39,13 @@ export class RouteHandler {
    * @return {RouteHandler}
    */
   addRoute(route) {
-    assertType(route instanceof Route,
+    assertType(TypeCheck.isRoute(route),
       'js-srouter:RoutesHandler:addRoute : `route` argument should be an instance of Route')
     if (
 
-      this.__routes.has(route.name)
+      this.__routes.has(route.name())
     ) {
-      throw RouteException.ALREADY_EXISTS(route.name)
+      throw RouteException.ALREADY_EXISTS(route.name())
     }
 
     return this.__registerRoute(route)
@@ -60,10 +59,10 @@ export class RouteHandler {
    */
   __registerRoute(route) {
     this.__routes.set(
-      route.name,
+      route.name(),
       new RouteCompiled(
         route,
-        UrlTemplateRegexp.regexpFromUrlTemplate(route.urlTemplate)
+        UrlTemplateRegexp.regexpFromUrlTemplate(route.urlTemplate())
       )
     )
     return this
@@ -98,7 +97,7 @@ export class RouteHandler {
     if (!this.hasRoute(name)) {
       throw RouteException.NOT_FOUND(name)
     }
-    return this.__routes.get(name).route
+    return this.__routes.get(name).route()
   }
 
   /**
@@ -114,10 +113,10 @@ export class RouteHandler {
 
     this.__routes.forEach((routeCompiled) => {
 
-      let matches = new PathnameParser(pathname).execWith(routeCompiled.regexp)
+      let matches = new PathnameParser(pathname).execWith(routeCompiled.regexp())
 
       if (isFound === false && matches !== null) {
-        route = routeCompiled.route
+        route = routeCompiled.route()
         params = Object.assign({}, matches.groups)
         isFound = true
       }
@@ -127,7 +126,10 @@ export class RouteHandler {
       throw RouteException.NOT_FOUND(pathname.value())
     }
 
-    return new RouteWithParams(route, params)
+    return new globalFlexioImport.io.flexio.js_router.types.RouteWithParamsBuilder()
+      .route(route)
+      .params(params)
+      .build()
   }
 
   /**
@@ -146,7 +148,7 @@ export class RouteHandler {
 
     return UrlTemplateRegexp
       .pathnameFromUrlTemplate(
-        routeCompiled.route.urlTemplate,
+        routeCompiled.route().urlTemplate(),
         routeParameters
       )
   }

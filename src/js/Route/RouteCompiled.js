@@ -1,5 +1,5 @@
 import {isRegex, assertType} from '@flexio-oss/assert'
-import {Route} from './Route'
+import {TypeCheck} from '../TypeCheck'
 
 export class RouteCompiled {
   /**
@@ -9,7 +9,7 @@ export class RouteCompiled {
    */
   constructor(route, regexp) {
     assertType(
-      route instanceof Route,
+      TypeCheck.isRoute(route),
       'RouteCompiled `route` argument should be an instance of Route'
     )
     assertType(
@@ -34,7 +34,7 @@ export class RouteCompiled {
    *
    * @return {Route}
    */
-  get route() {
+  route() {
     return this.__route
   }
 
@@ -42,7 +42,7 @@ export class RouteCompiled {
    *
    * @return {RegExp}
    */
-  get regexp() {
+  regexp() {
     return this.__regexp
   }
 }

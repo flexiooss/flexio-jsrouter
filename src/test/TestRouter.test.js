@@ -1,28 +1,13 @@
 /* global runTest */
+import '../../generated/io/package'
 import {URLExtended} from '@flexio-oss/extended-flex-types'
 import {TestCase} from 'code-altimeter-js'
 import {RouterBuilder} from '../js/RouterBuilder'
-import {Route} from '../js/Route/Route'
 import {UrlConfiguration} from '../js/UrlConfiguration'
 import {Pathname} from '../js/URL/Pathname'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 
 const assert = require('assert')
-
-const firstRoute = Route.build(
-  'firstRoute',
-  'firstRoute/{pageName}/{pageId}'
-)
-
-const otherRoute = Route.build(
-  'otherRoute',
-  'otherRoute/{pageName}/{pageId}'
-)
-
-const yetAnOtherRoute = Route.build(
-  'yetAnOtherRoute',
-  'yetAnOtherRoute/{pageName}/{pageId}'
-)
 
 /**
  * @extends TestCase
@@ -34,19 +19,38 @@ export class TestRouterTest extends TestCase {
       'localhost',
       '8080')
     )
+
+    this.firstRoute = this.router
+      .routeBuilder()
+      .name('firstRoute')
+      .urlTemplate('firstRoute/{pageName}/{pageId}')
+      .build()
+
+    this.otherRoute = this.router
+      .routeBuilder()
+      .name('otherRoute')
+      .urlTemplate('otherRoute/{pageName}/{pageId}')
+      .build()
+
+    this.yetAnOtherRoute = this.router
+      .routeBuilder()
+      .name('yetAnOtherRoute')
+      .urlTemplate('yetAnOtherRoute/{pageName}/{pageId}')
+      .build()
+
   }
 
   testAddRoute() {
-    const routeWithSameName = this.router.routeBuilder().build(
-      'firstRoute',
-      'routeWithSameName/{pageName}/{pageId}'
-    )
+    const routeWithSameName = this.router.routeBuilder()
+      .name('firstRoute')
+      .urlTemplate('routeWithSameName/{pageName}/{pageId}')
+      .build()
 
-    this.router.addRoute(firstRoute)
+    this.router.addRoute(this.firstRoute)
 
     assert.deepStrictEqual(
       this.router.route('firstRoute'),
-      firstRoute,
+      this.firstRoute,
       'should retrieve route by name'
     )
 
@@ -56,7 +60,7 @@ export class TestRouterTest extends TestCase {
   }
 
   testRemoveRoute() {
-    this.router.addRoute(firstRoute)
+    this.router.addRoute(this.firstRoute)
     this.router.removeRoute('firstRoute')
 
     assert.throws(() => {
@@ -67,9 +71,9 @@ export class TestRouterTest extends TestCase {
   testUrlByName() {
 
     this.router
-      .addRoute(firstRoute)
-      .addRoute(otherRoute)
-      .addRoute(yetAnOtherRoute)
+      .addRoute(this.firstRoute)
+      .addRoute(this.otherRoute)
+      .addRoute(this.yetAnOtherRoute)
 
     const url = this.router.urlByRouteName('firstRoute', {pageName: 'bibi', pageId: 5})
 
@@ -83,43 +87,44 @@ export class TestRouterTest extends TestCase {
   testParams() {
 
     this.router
-      .addRoute(firstRoute)
-      .addRoute(otherRoute)
-      .addRoute(yetAnOtherRoute)
+      .addRoute(this.firstRoute)
+      .addRoute(this.otherRoute)
+      .addRoute(this.yetAnOtherRoute)
 
     const routePathname1 = 'firstRoute/bibi/5'
 
-    const testUrl =  new globalFlexioImport.io.flexio.extended_flex_types.FlexUrlBuilder()
+    const testUrl = new globalFlexioImport.io.flexio.extended_flex_types.FlexUrlBuilder()
       .value('https://localhost:8080/' + routePathname1)
       .build()
 
-
     const routeWithParams1 = this.router.routeByUrl(testUrl)
 
-    assert.deepStrictEqual(routeWithParams1.params,
+    assert.deepStrictEqual(routeWithParams1.params(),
       {pageName: 'bibi', pageId: '5'}
     )
 
-    const testUrl2 =   globalFlexioImport.io.flexio.extended_flex_types.FlexUrlBuilder
+    const testUrl2 = globalFlexioImport.io.flexio.extended_flex_types.FlexUrlBuilder
       .fromURL(new URLExtended('firstRoute/bibi/5?toto=abc&truc=bof#42', 'https://localhost:8080'))
       .build()
 
     const routeWithParams2 = this.router.routeByUrl(testUrl2)
 
-    assert.deepStrictEqual(routeWithParams2.params,
+    assert.deepStrictEqual(routeWithParams2.params(),
       {pageName: 'bibi', pageId: '5'}
     )
   }
 
   testNotFound() {
     this.router
-      .addRoute(firstRoute)
-      .addRoute(otherRoute)
+      .addRoute(this.firstRoute)
+      .addRoute(this.otherRoute)
 
-    const otherRouteUrlFalse = new Pathname('book/bobo/7/')
+    const otherRouteUrlFalse = globalFlexioImport.io.flexio.extended_flex_types.FlexUrlBuilder
+      .fromURL(new URLExtended('book/bobo/7/', 'https://localhost:8080'))
+      .build()
 
     assert.throws(() => {
-      const routeWithParams = this.router.routeByPathname(otherRouteUrlFalse)
+      const routeWithParams = this.router.routeByUrl(otherRouteUrlFalse)
     })
   }
 }
