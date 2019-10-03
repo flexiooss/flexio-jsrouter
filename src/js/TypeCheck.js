@@ -2,7 +2,7 @@ import {Router} from './Router'
 import {UrlConfiguration} from './UrlConfiguration'
 import {ALREADY_EXISTS, NOT_FOUND, RouteException} from './Route/RouteException'
 import {RouteHandler} from './Route/RouteHandler'
-import {globalFlexioImport} from '../../../global-import-registry'
+import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 
 export class TypeCheck {
   /**
