@@ -1,4 +1,4 @@
-import {globalFlexioImport} from '../../../../global-import-registry'
+import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import {PathnameConstraints} from '../URL/PathnameConstraints'
 
 const START_RE = '^/?'
