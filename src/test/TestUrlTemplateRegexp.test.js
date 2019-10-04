@@ -1,7 +1,8 @@
 /* global runTest */
+import '../../generated/io/package'
 import {TestCase} from 'code-altimeter-js'
 import {UrlTemplateRegexp} from '../js/TemplateUrl/UrlTemplateRegexp'
-import {Pathname} from '../js/URL/Pathname'
+import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 
 const assert = require('assert')
 
@@ -32,7 +33,10 @@ export class TestUrlTemplateRegexpTest extends TestCase {
     const pathname = UrlTemplateRegexp.pathnameFromUrlTemplate(urlTemplate, {category: 'bobo', pageId: 7})
     console.log(pathname)
 
-    const expectedPathname = new Pathname('page/bobo/7')
+    const expectedPathname = new globalFlexioImport.io.flexio.js_router.types
+      .PathnameBuilder()
+      .value('page/bobo/7')
+      .build()
 
     assert.deepStrictEqual(
       pathname,

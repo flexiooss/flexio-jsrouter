@@ -1,4 +1,5 @@
-import {Pathname, PathnameBuilder} from '../URL/Pathname'
+import {globalFlexioImport} from '../../../../global-import-registry'
+import {PathnameConstraints} from '../URL/PathnameConstraints'
 
 const START_RE = '^/?'
 const PARAMETER_RE = '[^/]+'
@@ -152,7 +153,10 @@ export class UrlTemplateRegexp {
 
     } while (matches)
 
-    return new PathnameBuilder().value(pathname).build()
+    return new globalFlexioImport.io.flexio.js_router.types
+      .PathnameBuilder()
+      .value(PathnameConstraints.value(pathname))
+      .build()
   }
 
   /**

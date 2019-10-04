@@ -1,7 +1,6 @@
 import {Router} from './Router'
-import {RouteHandler} from './Route/RouteHandler'
-import {UrlConfigurationBuilder} from './UrlConfiguration'
-import {assertType} from '@flexio-oss/assert'
+import {UrlConfigurationBuilderFrom} from './URL/UrlConfigurationBuilderFrom'
+import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 
 export class RouterBuilder {
   /**
@@ -12,27 +11,7 @@ export class RouterBuilder {
    */
   static build(urlConfiguration) {
     return new Router(
-      urlConfiguration,
-      new RouteHandler()
-    )
-  }
-
-  /**
-   *
-   * @param {Location} location
-   * @return {Router}
-   * @static
-   */
-  static buildFromLocation(location) {
-    assertType(
-      location instanceof Location,
-      'RouterBuilder:buildFromLocation: `location` argument should be a `Location`'
-    )
-    return new Router(
-      UrlConfigurationBuilder
-        .fromLocation(location)
-        .build(),
-      new RouteHandler()
+      urlConfiguration
     )
   }
 
@@ -41,7 +20,16 @@ export class RouterBuilder {
    * @return {UrlConfigurationBuilder}
    */
   static urlConfigurationBuilder() {
-    return new UrlConfigurationBuilder()
+    return new globalFlexioImport.io.flexio.js_router.types.UrlConfigurationBuilder()
+  }
+
+  /**
+   *
+   * @param {Location} location
+   * @return {UrlConfigurationBuilder}
+   */
+  static urlConfigurationBuilderFromLocation(location) {
+    return UrlConfigurationBuilderFrom.Location(location)
   }
 
 }

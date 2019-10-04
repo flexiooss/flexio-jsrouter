@@ -1,8 +1,9 @@
 import {URLHandler} from './URL/URLHandler'
 import {assertType} from '@flexio-oss/assert'
-import {PathnameBuilder} from './URL/Pathname'
+import {PathnameBuilderFrom} from './URL/PathnameBuilderFrom'
 import {FlexUrl} from '@flexio-oss/extended-flex-types'
 import {TypeCheck} from './TypeCheck'
+import {RouteHandler} from './Route/RouteHandler'
 
 /**
  *
@@ -14,33 +15,31 @@ export class Router {
    * @param {UrlConfiguration} urlConfiguration
    * @param {RouteHandler} routesHandler
    */
-  constructor(urlConfiguration, routesHandler) {
+  constructor(urlConfiguration) {
     assertType(
       TypeCheck.isUrlConfiguration(urlConfiguration),
       'Router: `urlConfiguration` argument should be an instance of UrlConfiguration'
     )
-    assertType(
-      TypeCheck.isRouteHandler(routesHandler),
-      'Router: `routesHandler` argument should be an instance of RoutesHandler'
-    )
+
     /**
      *
      * @type {UrlConfiguration}
      * @private
      */
-    this._urlConfiguration = urlConfiguration
+    this.__urlConfiguration = urlConfiguration
     /**
      *
      * @type {RouteHandler}
      * @private
      */
-    this._routesHandler = routesHandler
+    this.__routesHandler = new RouteHandler(urlConfiguration)
+
     /**
      *
      * @type {URLHandler}
      * @private
      */
-    this._urlHandler = new URLHandler(this._urlConfiguration)
+    this.__urlHandler = new URLHandler(this.__urlConfiguration)
 
   }
 
@@ -49,7 +48,7 @@ export class Router {
    * @return {RouteBuilder}
    */
   routeBuilder() {
-    return this._routesHandler.routeBuilder()
+    return this.__routesHandler.routeBuilder()
   }
 
   /**
@@ -57,7 +56,7 @@ export class Router {
    * @return {UrlConfiguration}
    */
   get urlConfiguration() {
-    return this._urlConfiguration
+    return this.__urlConfiguration
   }
 
   /**
@@ -65,7 +64,7 @@ export class Router {
    * @return {URLHandler}
    */
   get urlHandler() {
-    return this._urlHandler
+    return this.__urlHandler
   }
 
   /**
@@ -74,7 +73,7 @@ export class Router {
    * @return {Router}
    */
   addRoute(route) {
-    this._routesHandler.addRoute(route)
+    this.__routesHandler.addRoute(route)
     return this
   }
 
@@ -84,7 +83,7 @@ export class Router {
    * @return {Router}
    */
   removeRoute(name) {
-    this._routesHandler.removeRoute(name)
+    this.__routesHandler.removeRoute(name)
     return this
   }
 
@@ -94,7 +93,7 @@ export class Router {
    * @return {Route}
    */
   route(name) {
-    return this._routesHandler.route(name)
+    return this.__routesHandler.route(name)
   }
 
   /**
@@ -105,7 +104,7 @@ export class Router {
    */
   urlByRouteName(name, routeParameters) {
     return this.urlHandler.pathnameToUrl(
-      this._routesHandler.pathnameByRouteName(
+      this.__routesHandler.pathnameByRouteName(
         name,
         routeParameters
       )
@@ -119,10 +118,10 @@ export class Router {
    * @throws {RouteException}
    */
   routeByUrl(url) {
-    return this._routesHandler
+    return this.__routesHandler
       .routeByPathname(
-        PathnameBuilder
-          .fromFlexUrl(url)
+        PathnameBuilderFrom
+          .FlexUrl(url)
           .build()
       )
   }

@@ -1,5 +1,4 @@
 import {Router} from './Router'
-import {UrlConfiguration} from './UrlConfiguration'
 import {ALREADY_EXISTS, NOT_FOUND, RouteException} from './Route/RouteException'
 import {RouteHandler} from './Route/RouteHandler'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
@@ -20,7 +19,16 @@ export class TypeCheck {
    * @return {boolean}
    */
   static isUrlConfiguration(instance) {
-    return instance instanceof UrlConfiguration
+    return instance instanceof globalFlexioImport.io.flexio.js_router.types.UrlConfiguration
+  }
+
+  /**
+   *
+   * @param {*} instance
+   * @return {boolean}
+   */
+  static isPathname(instance) {
+    return instance instanceof globalFlexioImport.io.flexio.js_router.types.Pathname
   }
 
   /**

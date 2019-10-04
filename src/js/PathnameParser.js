@@ -1,13 +1,16 @@
 import {assert} from '@flexio-oss/assert'
-import {Pathname} from './URL/Pathname'
+import {TypeCheck} from './TypeCheck'
+import {UrlConfigurationHandler} from './URL/UrlConfigurationHandler'
 
 export class PathnameParser {
   /**
    *
    * @param {Pathname} pathname
+   * @param {UrlConfiguration} urlConfiguration
    */
-  constructor(pathname) {
-    assert(pathname instanceof Pathname,
+  constructor(pathname, urlConfiguration) {
+    assert(
+      TypeCheck.isPathname(pathname),
       'PathParser:constructor: `pathname` argument should be an instance of Pathname, `%s` given',
       typeof pathname
     )
@@ -17,6 +20,18 @@ export class PathnameParser {
      * @private
      */
     this.__pathname = pathname
+
+    assert(
+      TypeCheck.isUrlConfiguration(urlConfiguration),
+      'PathParser:constructor: `urlConfiguration` argument should be an instance of UrlConfiguration, `%s` given',
+      typeof urlConfiguration
+    )
+    /**
+     *
+     * @type {UrlConfigurationHandler}
+     * @private
+     */
+    this.__urlConfigurationHandler = new UrlConfigurationHandler(urlConfiguration)
   }
 
   /**
@@ -33,14 +48,23 @@ export class PathnameParser {
    * @return {?RegExpMatchArray}
    */
   execWith(regexp) {
-    if (this.__resetRegexp(regexp).test(this.pathname.value())) {
-      return this.__resetRegexp(regexp).exec(this.pathname.value())
+    let realPathname = this.pathname.value()
+
+    if (this.__urlConfigurationHandler.pathnameString() !== '') {
+      realPathname = this.pathname.value().replace(
+        this.__urlConfigurationHandler.pathnameString(),
+        '/'
+      )
+    }
+
+    if (this.__resetRegexp(regexp).test(realPathname)) {
+      return this.__resetRegexp(regexp).exec(realPathname)
     }
     return null
   }
 
   __resetRegexp(regexp) {
-    regexp.lastIndex = 0
+    // regexp.lastIndex = 0
     return regexp
   }
 }

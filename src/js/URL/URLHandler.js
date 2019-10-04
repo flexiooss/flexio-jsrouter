@@ -1,6 +1,8 @@
-import {Pathname, PathnameBuilder} from './Pathname'
+import {PathnameBuilderFrom} from './PathnameBuilderFrom'
 import {URLExtended} from '@flexio-oss/extended-flex-types'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
+import {UrlConfigurationHandler} from './UrlConfigurationHandler'
+import {PathnameConstraints} from './PathnameConstraints'
 
 export class URLHandler {
   /**
@@ -10,10 +12,10 @@ export class URLHandler {
   constructor(urlConfiguration) {
     /**
      *
-     * @type {UrlConfiguration}
+     * @type {UrlConfigurationHandler}
      * @private
      */
-    this.__urlConfiguration = urlConfiguration
+    this.__urlConfigurationHandler = new UrlConfigurationHandler(urlConfiguration)
   }
 
   /**
@@ -23,7 +25,7 @@ export class URLHandler {
    * @constructor
    */
   urlToPathname(url) {
-    return PathnameBuilder.fromURL(url).build()
+    return PathnameBuilderFrom.URL(url).build()
   }
 
   /**
@@ -33,7 +35,9 @@ export class URLHandler {
    * @constructor
    */
   locationToPathname(location) {
-    return new PathnameBuilder().value(location.pathname).build()
+    return new globalFlexioImport.io.flexio.js_router.types.PathnameBuilder()
+      .value(PathnameConstraints.value(location.pathname))
+      .build()
   }
 
   /**
@@ -42,9 +46,15 @@ export class URLHandler {
    * @return {FlexUrl}
    */
   pathnameToUrl(pathname) {
+
     return globalFlexioImport.io.flexio.extended_flex_types
       .FlexUrlBuilder
-      .fromURL(new URLExtended(pathname.value(), this.__urlConfiguration.origin()))
+      .fromURL(
+        new URLExtended(
+          (this.__urlConfigurationHandler.pathnameString() + `${pathname.value().replace(/^\//, '')}`).replace(/\/$/, ''),
+          this.__urlConfigurationHandler.origin())
+      )
       .build()
   }
+
 }

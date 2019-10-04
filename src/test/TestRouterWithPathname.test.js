@@ -10,13 +10,15 @@ const assert = require('assert')
 /**
  * @extends TestCase
  */
-export class TestRouterTest extends TestCase {
+export class TestRouterWithPathname extends TestCase {
   setUp() {
+
     this.router = RouterBuilder.build(
-       RouterBuilder.urlConfigurationBuilder()
+      RouterBuilder.urlConfigurationBuilder()
         .port('8080')
         .protocol('https')
         .hostname('localhost')
+        .pathname('/pathname')
         .build()
     )
 
@@ -78,7 +80,7 @@ export class TestRouterTest extends TestCase {
     const url = this.router.urlByRouteName('firstRoute', {pageName: 'bibi', pageId: 5})
 
     const expectedUrl = new globalFlexioImport.io.flexio.extended_flex_types.FlexUrlBuilder()
-      .value('https://localhost:8080/firstRoute/bibi/5')
+      .value('https://localhost:8080/pathname/firstRoute/bibi/5')
       .build()
 
     assert.deepStrictEqual(url, expectedUrl, 'should retrieve Url from name with params')
@@ -94,7 +96,7 @@ export class TestRouterTest extends TestCase {
     const routePathname1 = 'firstRoute/bibi/5'
 
     const testUrl = new globalFlexioImport.io.flexio.extended_flex_types.FlexUrlBuilder()
-      .value('https://localhost:8080/' + routePathname1)
+      .value('https://localhost:8080/pathname/' + routePathname1)
       .build()
 
     const routeWithParams1 = this.router.routeByUrl(testUrl)
@@ -104,7 +106,7 @@ export class TestRouterTest extends TestCase {
     )
 
     const testUrl2 = globalFlexioImport.io.flexio.extended_flex_types.FlexUrlBuilder
-      .fromURL(new URLExtended('firstRoute/bibi/5?toto=abc&truc=bof#42', 'https://localhost:8080'))
+      .fromURL(new URLExtended('pathname/firstRoute/bibi/5?toto=abc&truc=bof#42', 'https://localhost:8080'))
       .build()
 
     const routeWithParams2 = this.router.routeByUrl(testUrl2)
@@ -119,7 +121,6 @@ export class TestRouterTest extends TestCase {
       {pageName: 'bibi', pageId: '5'}
     )
 
-
   }
 
   testNotFound() {
@@ -128,7 +129,7 @@ export class TestRouterTest extends TestCase {
       .addRoute(this.otherRoute)
 
     const otherRouteUrlFalse = globalFlexioImport.io.flexio.extended_flex_types.FlexUrlBuilder
-      .fromURL(new URLExtended('book/bobo/7/', 'https://localhost:8080'))
+      .fromURL(new URLExtended('pathname/book/bobo/7/', 'https://localhost:8080'))
       .build()
 
     assert.throws(() => {
@@ -137,4 +138,4 @@ export class TestRouterTest extends TestCase {
   }
 }
 
-runTest(TestRouterTest)
+runTest(TestRouterWithPathname)

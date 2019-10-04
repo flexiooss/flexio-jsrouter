@@ -1,5 +1,5 @@
 import {assertType} from '@flexio-oss/assert'
-import {RouteCompiled} from './RouteCompiled'
+import {RouteCompiledConstraints} from './RouteCompiledConstraints'
 import {UrlTemplateRegexp} from '../TemplateUrl/UrlTemplateRegexp'
 import {PathnameParser} from '../PathnameParser'
 import {RouteException} from './RouteException'
@@ -7,7 +7,16 @@ import {TypeCheck} from '../TypeCheck'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 
 export class RouteHandler {
-  constructor() {
+  /**
+   * @param {UrlConfiguration} urlConfiguration
+   */
+  constructor(urlConfiguration) {
+    /**
+     *
+     * @type {UrlConfiguration}
+     * @private
+     */
+    this.__urlConfiguration = urlConfiguration
     /**
      *
      * @type {Map<string, RouteCompiled>}
@@ -60,10 +69,12 @@ export class RouteHandler {
   __registerRoute(route) {
     this.__routes.set(
       route.name(),
-      new RouteCompiled(
-        route,
-        UrlTemplateRegexp.regexpFromUrlTemplate(route.urlTemplate())
-      )
+      new globalFlexioImport.io.flexio.js_router.types.RouteCompiledBuilder()
+        .route(route)
+        .regexp(RouteCompiledConstraints.regexp(
+          UrlTemplateRegexp.regexpFromUrlTemplate(route.urlTemplate()))
+        )
+        .build()
     )
     return this
   }
@@ -113,7 +124,7 @@ export class RouteHandler {
 
     this.__routes.forEach((routeCompiled) => {
 
-      let matches = new PathnameParser(pathname).execWith(routeCompiled.regexp())
+      let matches = new PathnameParser(pathname, this.__urlConfiguration).execWith(routeCompiled.regexp())
 
       if (isFound === false && matches !== null) {
         route = routeCompiled.route()
