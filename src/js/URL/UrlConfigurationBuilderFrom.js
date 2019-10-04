@@ -7,7 +7,7 @@ export class UrlConfigurationBuilderFrom {
    * @return UrlConfigurationBuilder
    */
   static Location(location) {
-    const builder = new globalFlexioImport.io.flexio.js_router.types.UrlConfigurationBuilder()
+    return new globalFlexioImport.io.flexio.js_router.types.UrlConfigurationBuilder()
       .protocol(location.protocol)
       .hostname(location.hostname)
       .port(location.port)
