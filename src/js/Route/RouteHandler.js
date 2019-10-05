@@ -5,6 +5,7 @@ import {PathnameParser} from '../PathnameParser'
 import {RouteException} from './RouteException'
 import {TypeCheck} from '../TypeCheck'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
+import {RouteConstraints} from './RouteConstraints'
 
 export class RouteHandler {
   /**
@@ -50,6 +51,9 @@ export class RouteHandler {
   addRoute(route) {
     assertType(TypeCheck.isRoute(route),
       'js-srouter:RoutesHandler:addRoute : `route` argument should be an instance of Route')
+
+    RouteConstraints.urlTemplate(route.urlTemplate())
+
     if (
 
       this.__routes.has(route.name())
