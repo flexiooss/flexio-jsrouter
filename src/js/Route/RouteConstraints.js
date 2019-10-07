@@ -9,8 +9,8 @@ export class RouteConstraints {
   static urlTemplate(value) {
     if (!isNull(value)) {
       assert(
-        new RegExp('^\/').test(value),
-        'RouteConstraints:templateUrl: `value` should test \'^\/\' : `%s` given',
+        new RegExp(/^\//).test(value),
+        'RouteConstraints:templateUrl: `value` should test `^/` : `%s` given',
         value
       )
     }

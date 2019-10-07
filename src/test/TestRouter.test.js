@@ -63,6 +63,13 @@ export class TestRouterTest extends TestCase {
     assert.throws(() => {
       this.router.addRoute(routeWithSameName)
     })
+
+    assert.throws(() => {
+      this.router.addRoute(this.router.routeBuilder()
+        .name('firstRoute')
+        .urlTemplate('routeWithoutSlash/{pageName}/{pageId}')
+        .build())
+    })
   }
 
   testRemoveRoute() {
