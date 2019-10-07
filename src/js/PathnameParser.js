@@ -57,6 +57,10 @@ export class PathnameParser {
       )
     }
 
+    if(realPathname === ''){
+      realPathname ='/'
+    }
+
     if (this.__resetRegexp(regexp).test(realPathname)) {
       return this.__resetRegexp(regexp).exec(realPathname)
     }

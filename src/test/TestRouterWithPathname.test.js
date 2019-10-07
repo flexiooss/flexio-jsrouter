@@ -149,15 +149,15 @@ export class TestRouterWithPathname extends TestCase {
       this.firstRoute
     )
 
-    // assert.deepStrictEqual(
-    //   this.router.routeByUrl(
-    //     new globalFlexioImport.io.flexio.extended_flex_types.FlexUrlBuilder()
-    //       .value('https://localhost:8080/pathname')
-    //       .build()
-    //   )
-    //     .route(),
-    //   this.rootRoute
-    // )
+    assert.deepStrictEqual(
+      this.router.routeByUrl(
+        new globalFlexioImport.io.flexio.extended_flex_types.FlexUrlBuilder()
+          .value('https://localhost:8080/pathname')
+          .build()
+      )
+        .route(),
+      this.rootRoute
+    )
 
     assert.deepStrictEqual(
       this.router.routeByUrl(
@@ -169,15 +169,16 @@ export class TestRouterWithPathname extends TestCase {
       this.rootRoute
     )
 
-    // assert.deepStrictEqual(
-    //   this.router.routeByUrl(
-    //     new globalFlexioImport.io.flexio.extended_flex_types.FlexUrlBuilder()
-    //       .value('https://localhost:8080/pathname?toto=abc&truc=bof#42')
-    //       .build()
-    //   )
-    //     .route(),
-    //   this.rootRoute
-    // )
+    assert.deepStrictEqual(
+      this.router.routeByUrl(
+        new globalFlexioImport.io.flexio.extended_flex_types.FlexUrlBuilder()
+          .value('https://localhost:8080/pathname?toto=abc&truc=bof#42')
+          .build()
+      )
+        .route(),
+      this.rootRoute
+    )
+
     assert.deepStrictEqual(
       this.router.routeByUrl(
         new globalFlexioImport.io.flexio.extended_flex_types.FlexUrlBuilder()
