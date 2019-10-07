@@ -52,13 +52,13 @@ export class PathnameParser {
 
     if (this.__urlConfigurationHandler.pathnameString() !== '') {
       realPathname = this.pathname.value().replace(
-        this.__urlConfigurationHandler.pathnameString(),
-        '/'
+        this.__urlConfigurationHandler.pathnameString().replace(/\/$/, ''),
+        ''
       )
     }
 
-    if(realPathname === ''){
-      realPathname ='/'
+    if (realPathname === '') {
+      realPathname = '/'
     }
 
     if (this.__resetRegexp(regexp).test(realPathname)) {
