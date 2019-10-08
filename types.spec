@@ -1,6 +1,7 @@
 Route:
   name: string
   urlTemplate: string
+  parent: string
 
 RouteWithParams:
   route: $Route

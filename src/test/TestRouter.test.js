@@ -44,6 +44,12 @@ export class TestRouterTest extends TestCase {
       .urlTemplate('/')
       .build()
 
+    this.resource = this.router
+      .routeBuilder()
+      .name('resource')
+      .urlTemplate('/resource')
+      .build()
+
   }
 
   testAddRoute() {
@@ -70,6 +76,40 @@ export class TestRouterTest extends TestCase {
         .urlTemplate('routeWithoutSlash/{pageName}/{pageId}')
         .build())
     })
+  }
+
+  testAddSubRoute() {
+
+    const resource = this.router.addRoute(this.resource)
+
+    resource.addRoute(
+      this.router
+        .routeBuilder()
+        .name('resource.subRoute')
+        .urlTemplate('/{id}')
+        .build()
+    )
+
+    assert.deepStrictEqual(
+      this.router.route('resource.subRoute'),
+      this.router
+        .routeBuilder()
+        .name('resource.subRoute')
+        .urlTemplate('/{id}')
+        .parent('resource')
+        .build(),
+      'should retrieve route by name'
+    )
+
+    assert.throws(() => {
+      this.router.addRoute(this.router
+        .routeBuilder()
+        .name('resource.subRoute')
+        .urlTemplate('/{id}')
+        .parent('resource')
+        .build())
+    })
+
   }
 
   testRemoveRoute() {
