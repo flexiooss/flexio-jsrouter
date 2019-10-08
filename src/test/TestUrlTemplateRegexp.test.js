@@ -29,13 +29,13 @@ export class TestUrlTemplateRegexpTest extends TestCase {
   }
 
   testTemplateToPathname() {
-    const urlTemplate = 'page/{category}/{pageId}'
+    const urlTemplate = '/page/{category}/{pageId}'
     const pathname = UrlTemplateRegexp.pathnameFromUrlTemplate(urlTemplate, {category: 'bobo', pageId: 7})
     console.log(pathname)
 
     const expectedPathname = new globalFlexioImport.io.flexio.js_router.types
       .PathnameBuilder()
-      .value('page/bobo/7')
+      .value('/page/bobo/7')
       .build()
 
     assert.deepStrictEqual(

@@ -2,7 +2,7 @@ import {PathnameBuilderFrom} from './PathnameBuilderFrom'
 import {URLExtended} from '@flexio-oss/extended-flex-types'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import {UrlConfigurationHandler} from './UrlConfigurationHandler'
-import {PathnameConstraints} from './PathnameConstraints'
+import {PathnameValidator} from './PathnameValidator'
 
 export class URLHandler {
   /**
@@ -35,9 +35,12 @@ export class URLHandler {
    * @constructor
    */
   locationToPathname(location) {
-    return new globalFlexioImport.io.flexio.js_router.types.PathnameBuilder()
-      .value(PathnameConstraints.value(location.pathname))
+    const pathname = new globalFlexioImport.io.flexio.js_router.types.PathnameBuilder()
+      .value(location.pathname)
       .build()
+
+    new PathnameValidator().isValid(pathname)
+    return pathname
   }
 
   /**

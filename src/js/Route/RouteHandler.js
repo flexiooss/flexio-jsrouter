@@ -1,11 +1,11 @@
 import {assertType} from '@flexio-oss/assert'
-import {RouteCompiledConstraints} from './RouteCompiledConstraints'
+import {RouteCompiledValidator} from './RouteCompiledValidator'
 import {UrlTemplateRegexp} from '../TemplateUrl/UrlTemplateRegexp'
 import {PathnameParser} from '../PathnameParser'
 import {RouteException} from './RouteException'
 import {TypeCheck} from '../TypeCheck'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
-import {RouteConstraints} from './RouteConstraints'
+import {RouteValidator} from './RouteValidator'
 
 export class RouteHandler {
   /**
@@ -52,7 +52,7 @@ export class RouteHandler {
     assertType(TypeCheck.isRoute(route),
       'js-srouter:RoutesHandler:addRoute : `route` argument should be an instance of Route')
 
-    RouteConstraints.urlTemplate(route.urlTemplate())
+    new RouteValidator().isValid(route)
 
     if (
 
@@ -71,14 +71,18 @@ export class RouteHandler {
    * @private
    */
   __registerRoute(route) {
+
+    const routeCompiled = new globalFlexioImport.io.flexio.js_router.types.RouteCompiledBuilder()
+      .route(route)
+      .regexp(UrlTemplateRegexp.regexpFromUrlTemplate(route.urlTemplate())
+      )
+      .build()
+
+    new RouteCompiledValidator().isValid(routeCompiled)
+
     this.__routes.set(
       route.name(),
-      new globalFlexioImport.io.flexio.js_router.types.RouteCompiledBuilder()
-        .route(route)
-        .regexp(RouteCompiledConstraints.regexp(
-          UrlTemplateRegexp.regexpFromUrlTemplate(route.urlTemplate()))
-        )
-        .build()
+      routeCompiled
     )
     return this
   }

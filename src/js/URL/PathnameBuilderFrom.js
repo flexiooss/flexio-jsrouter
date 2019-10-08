@@ -1,7 +1,6 @@
 import {assertType, isNull} from '@flexio-oss/assert'
 import {URLExtendedBuilder} from '@flexio-oss/extended-flex-types'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
-import {PathnameConstraints} from './PathnameConstraints'
 
 export class PathnameBuilderFrom {
 
@@ -15,7 +14,7 @@ export class PathnameBuilderFrom {
     }
     let builder = new globalFlexioImport.io.flexio.js_router.types
       .PathnameBuilder()
-    builder.value(PathnameConstraints.value(url.pathname))
+    builder.value(url.pathname)
     return builder
   }
 
