@@ -121,6 +121,24 @@ export class TestRouterTest extends TestCase {
     })
   }
 
+  testRemoveSubRoute() {
+    const resource = this.router.addRoute(this.resource)
+
+    resource.addRoute(
+      this.router
+        .routeBuilder()
+        .name('resource.subRoute')
+        .urlTemplate('/{id}')
+        .build()
+    )
+
+    this.router.removeRoute('resource.subRoute')
+
+    assert.throws(() => {
+      this.router.route('resource.subRoute')
+    })
+  }
+
   testUrlByName() {
 
     this.router
@@ -144,6 +162,28 @@ export class TestRouterTest extends TestCase {
       .build()
 
     assert.deepStrictEqual(url2, expectedUrl2, '2:should retrieve Url from name with params')
+  }
+
+  testSubUrlByName() {
+
+    const resource = this.router.addRoute(this.resource)
+
+    resource.addRoute(
+      this.router
+        .routeBuilder()
+        .name('resource.subRoute')
+        .urlTemplate('/{id}')
+        .build()
+    )
+
+    const url1 = this.router.urlByRouteName('resource.subRoute', {id: 5})
+
+    const expectedUrl1 = new globalFlexioImport.io.flexio.extended_flex_types.FlexUrlBuilder()
+      .value('https://localhost:8080/resource/5')
+      .build()
+
+    assert.deepStrictEqual(url1, expectedUrl1, 'should retrieve subUrl from name with params')
+
   }
 
   testRouteByUrl() {
@@ -256,6 +296,29 @@ export class TestRouterTest extends TestCase {
 
   }
 
+  testSubRouteByUrl() {
+
+    const resource = this.router.addRoute(this.resource)
+
+    resource.addRoute(
+      this.router
+        .routeBuilder()
+        .name('resource.subRoute')
+        .urlTemplate('/{id}')
+        .build()
+    )
+
+    assert.deepStrictEqual(
+      this.router.routeByUrl(
+        new globalFlexioImport.io.flexio.extended_flex_types.FlexUrlBuilder()
+          .value('https://localhost:8080/resource/5')
+          .build()
+      )
+        .route(),
+      this.router.route('resource.subRoute')
+    )
+  }
+
   testParams() {
 
     this.router
@@ -302,6 +365,29 @@ export class TestRouterTest extends TestCase {
       {}
     )
 
+  }
+
+  testSubRouteParam() {
+
+    const resource = this.router.addRoute(this.resource)
+
+    resource.addRoute(
+      this.router
+        .routeBuilder()
+        .name('resource.subRoute')
+        .urlTemplate('/{id}')
+        .build()
+    )
+
+    assert.deepStrictEqual(
+      this.router.routeByUrl(
+        new globalFlexioImport.io.flexio.extended_flex_types.FlexUrlBuilder()
+          .value('https://localhost:8080/resource/5')
+          .build()
+      )
+        .params(),
+      {id: '5'}
+    )
   }
 
   testNotFound() {
