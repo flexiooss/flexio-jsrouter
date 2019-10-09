@@ -3,6 +3,7 @@ import {ALREADY_EXISTS, NOT_FOUND, RouteException} from './Route/RouteException'
 import {RoutesCompiledHandler} from './Route/RoutesCompiledHandler'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import {RoutesHandler} from './Route/RoutesHandler'
+import {PublicRouteHandler} from './PublicRouteHandler'
 
 export class TypeCheck {
   /**
@@ -93,6 +94,15 @@ export class TypeCheck {
    */
   static isRoutesHandler(instance) {
     return instance instanceof RoutesHandler
+  }
+
+  /**
+   *
+   * @param {*} instance
+   * @return {boolean}
+   */
+  static isPublicRouteHandler(instance) {
+    return instance instanceof PublicRouteHandler
   }
 
 }
