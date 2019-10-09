@@ -118,7 +118,8 @@ export class RoutesCompiledHandler extends RoutesHandler {
         new RouteParentWalker(route, this)
           .map(route => route.urlTemplate())
           .reverse()
-          .join())
+          .join('')
+      )
       .build()
 
   }

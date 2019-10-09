@@ -95,7 +95,7 @@ export class TestRouterTest extends TestCase {
       this.router
         .routeBuilder()
         .name('resource.subRoute')
-        .urlTemplate('/{id}')
+        .urlTemplate('/resource/{id}')
         .parent('resource')
         .build(),
       'should retrieve route by name'
@@ -105,7 +105,7 @@ export class TestRouterTest extends TestCase {
       this.router.addRoute(this.router
         .routeBuilder()
         .name('resource.subRoute')
-        .urlTemplate('/{id}')
+        .urlTemplate('/resource/{id}')
         .parent('resource')
         .build())
     })
@@ -141,11 +141,10 @@ export class TestRouterTest extends TestCase {
 
   testUrlByName() {
 
-    this.router
-      .addRoute(this.firstRoute)
-      .addRoute(this.otherRoute)
-      .addRoute(this.yetAnOtherRoute)
-      .addRoute(this.rootRoute)
+    this.router.addRoute(this.firstRoute)
+    this.router.addRoute(this.otherRoute)
+    this.router.addRoute(this.yetAnOtherRoute)
+    this.router.addRoute(this.rootRoute)
 
     const url1 = this.router.urlByRouteName('firstRoute', {pageName: 'bibi', pageId: 5})
 
