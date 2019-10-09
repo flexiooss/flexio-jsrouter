@@ -188,11 +188,10 @@ export class TestRouterTest extends TestCase {
 
   testRouteByUrl() {
 
-    this.router
-      .addRoute(this.firstRoute)
-      .addRoute(this.otherRoute)
-      .addRoute(this.yetAnOtherRoute)
-      .addRoute(this.rootRoute)
+    this.router.addRoute(this.firstRoute)
+    this.router.addRoute(this.otherRoute)
+    this.router.addRoute(this.yetAnOtherRoute)
+    this.router.addRoute(this.rootRoute)
 
     assert.deepStrictEqual(
       this.router.routeByUrl(
@@ -321,11 +320,10 @@ export class TestRouterTest extends TestCase {
 
   testParams() {
 
-    this.router
-      .addRoute(this.firstRoute)
-      .addRoute(this.otherRoute)
-      .addRoute(this.yetAnOtherRoute)
-      .addRoute(this.rootRoute)
+    this.router.addRoute(this.firstRoute)
+    this.router.addRoute(this.otherRoute)
+    this.router.addRoute(this.yetAnOtherRoute)
+    this.router.addRoute(this.rootRoute)
 
     const routePathname1 = 'firstRoute/bibi/5'
 
@@ -391,9 +389,8 @@ export class TestRouterTest extends TestCase {
   }
 
   testNotFound() {
-    this.router
-      .addRoute(this.firstRoute)
-      .addRoute(this.otherRoute)
+    this.router.addRoute(this.firstRoute)
+    this.router.addRoute(this.otherRoute)
 
     const otherRouteUrlFalse = globalFlexioImport.io.flexio.extended_flex_types.FlexUrlBuilder
       .fromURL(new URLExtended('book/bobo/7/', 'https://localhost:8080'))
