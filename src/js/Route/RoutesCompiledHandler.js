@@ -84,12 +84,13 @@ export class RoutesCompiledHandler extends RoutesHandler {
    */
   __registerRoute(route) {
 
-    route = this.__ensureHierarchicalUrlTemplate(route)
+    const urlTemplate = this.__ensureHierarchicalUrlTemplate(route)
 
-    const routeCompiled = new globalFlexioImport.io.flexio.js_router.types.RouteCompiledBuilder()
+    const routeCompiled = new globalFlexioImport.io.flexio.js_router.types
+      .RouteCompiledBuilder()
       .route(route)
-      .regexp(UrlTemplateRegexp.regexpFromUrlTemplate(route.urlTemplate())
-      )
+      .urlTemplate(urlTemplate)
+      .regexp(UrlTemplateRegexp.regexpFromUrlTemplate(urlTemplate))
       .build()
 
     new RouteCompiledValidator().isValid(routeCompiled)
@@ -105,22 +106,18 @@ export class RoutesCompiledHandler extends RoutesHandler {
   /**
    *
    * @param {Route} route
-   * @return {Route}
+   * @return {string}
    * @private
    */
   __ensureHierarchicalUrlTemplate(route) {
     if (isNull(route.parent())) {
-      return route
+      return route.urlTemplate()
     }
 
-    return globalFlexioImport.io.flexio.js_router.types.RouteBuilder.from(route)
-      .urlTemplate(
-        new RouteParentWalker(route, this)
-          .map(route => route.urlTemplate())
-          .reverse()
-          .join('')
-      )
-      .build()
+    return new RouteParentWalker(route, this)
+      .map(route => route.urlTemplate())
+      .reverse()
+      .join('')
 
   }
 
@@ -204,7 +201,7 @@ export class RoutesCompiledHandler extends RoutesHandler {
 
     return UrlTemplateRegexp
       .pathnameFromUrlTemplate(
-        routeCompiled.route().urlTemplate(),
+        routeCompiled.urlTemplate(),
         routeParameters
       )
   }

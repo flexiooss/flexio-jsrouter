@@ -18,4 +18,5 @@ Pathname:
 
 RouteCompiled:
   route: $Route
+  urlTemplate: string
   regexp: object

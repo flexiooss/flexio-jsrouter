@@ -82,7 +82,7 @@ export class TestRouterTest extends TestCase {
 
     const resource = this.router.addRoute(this.resource)
 
-    resource.addRoute(
+    const subroute1 = resource.addRoute(
       this.router
         .routeBuilder()
         .name('resource.subRoute')
@@ -95,7 +95,7 @@ export class TestRouterTest extends TestCase {
       this.router
         .routeBuilder()
         .name('resource.subRoute')
-        .urlTemplate('/resource/{id}')
+        .urlTemplate('/{id}')
         .parent('resource')
         .build(),
       'should retrieve route by name'
@@ -105,10 +105,29 @@ export class TestRouterTest extends TestCase {
       this.router.addRoute(this.router
         .routeBuilder()
         .name('resource.subRoute')
-        .urlTemplate('/resource/{id}')
+        .urlTemplate('/{id}')
         .parent('resource')
         .build())
     })
+
+    subroute1.addRoute(
+      this.router
+        .routeBuilder()
+        .name('resource.subRoute.element')
+        .urlTemplate('/element/{elementId}')
+        .build()
+    )
+
+    assert.deepStrictEqual(
+      this.router.route('resource.subRoute.element'),
+      this.router
+        .routeBuilder()
+        .name('resource.subRoute.element')
+        .urlTemplate('/element/{elementId}')
+        .parent('resource.subRoute')
+        .build(),
+      'should retrieve route by name'
+    )
 
   }
 
@@ -167,7 +186,7 @@ export class TestRouterTest extends TestCase {
 
     const resource = this.router.addRoute(this.resource)
 
-    resource.addRoute(
+    const subroute1 = resource.addRoute(
       this.router
         .routeBuilder()
         .name('resource.subRoute')
@@ -181,7 +200,23 @@ export class TestRouterTest extends TestCase {
       .value('https://localhost:8080/resource/5')
       .build()
 
-    assert.deepStrictEqual(url1, expectedUrl1, 'should retrieve subUrl from name with params')
+    assert.deepStrictEqual(url1, expectedUrl1, '1 : should retrieve subUrl from name with params')
+
+    subroute1.addRoute(
+      this.router
+        .routeBuilder()
+        .name('resource.subRoute.element')
+        .urlTemplate('/element/{elementId}')
+        .build()
+    )
+
+    const url2 = this.router.urlByRouteName('resource.subRoute.element', {id: 5, elementId: 12})
+
+    const expectedUrl2 = new globalFlexioImport.io.flexio.extended_flex_types.FlexUrlBuilder()
+      .value('https://localhost:8080/resource/5/element/12')
+      .build()
+
+    assert.deepStrictEqual(url2, expectedUrl2, '2 : should retrieve subUrl from name with params')
 
   }
 
@@ -261,6 +296,7 @@ export class TestRouterTest extends TestCase {
         .route(),
       this.rootRoute
     )
+
     assert.deepStrictEqual(
       this.router.routeByUrl(
         new globalFlexioImport.io.flexio.extended_flex_types.FlexUrlBuilder()
@@ -270,6 +306,7 @@ export class TestRouterTest extends TestCase {
         .route(),
       this.rootRoute
     )
+
     assert.deepStrictEqual(
       this.router.routeByUrl(
         globalFlexioImport.io.flexio.extended_flex_types.FlexUrlBuilder
@@ -298,7 +335,7 @@ export class TestRouterTest extends TestCase {
 
     const resource = this.router.addRoute(this.resource)
 
-    resource.addRoute(
+    const subroute1 = resource.addRoute(
       this.router
         .routeBuilder()
         .name('resource.subRoute')
@@ -314,6 +351,24 @@ export class TestRouterTest extends TestCase {
       )
         .route(),
       this.router.route('resource.subRoute')
+    )
+
+    subroute1.addRoute(
+      this.router
+        .routeBuilder()
+        .name('resource.subRoute.element')
+        .urlTemplate('/element/{elementId}')
+        .build()
+    )
+
+    assert.deepStrictEqual(
+      this.router.routeByUrl(
+        new globalFlexioImport.io.flexio.extended_flex_types.FlexUrlBuilder()
+          .value('https://localhost:8080/resource/5/element/12')
+          .build()
+      )
+        .route(),
+      this.router.route('resource.subRoute.element')
     )
   }
 
@@ -368,7 +423,7 @@ export class TestRouterTest extends TestCase {
 
     const resource = this.router.addRoute(this.resource)
 
-    resource.addRoute(
+    const subroute1 = resource.addRoute(
       this.router
         .routeBuilder()
         .name('resource.subRoute')
@@ -384,6 +439,24 @@ export class TestRouterTest extends TestCase {
       )
         .params(),
       {id: '5'}
+    )
+
+    subroute1.addRoute(
+      this.router
+        .routeBuilder()
+        .name('resource.subRoute.element')
+        .urlTemplate('/element/{elementId}')
+        .build()
+    )
+
+    assert.deepStrictEqual(
+      this.router.routeByUrl(
+        new globalFlexioImport.io.flexio.extended_flex_types.FlexUrlBuilder()
+          .value('https://localhost:8080/resource/5/element/12')
+          .build()
+      )
+        .params(),
+      {id: '5', elementId: '12'}
     )
   }
 
