@@ -1,4 +1,4 @@
-import {assert, isNull} from '@flexio-oss/assert'
+import {assert} from '@flexio-oss/assert'
 import {StringValidator, ValueObjectValidator} from '@flexio-oss/js-validator-helper'
 
 export class RouteValidator extends ValueObjectValidator {
@@ -9,8 +9,21 @@ export class RouteValidator extends ValueObjectValidator {
    * @return {boolean}
    */
   isValid(object) {
+    this.__validateName(object)
     this.__validateUrlTemplate(object)
+  }
 
+  /**
+   *
+   * @param {Route} object
+   * @return {boolean}
+   * @private
+   */
+  __validateName(object) {
+    assert(
+      new StringValidator().validateNotNull(object.name()),
+      'RouteValidator:name: `name` should be not null'
+    )
   }
 
   /**
@@ -20,19 +33,24 @@ export class RouteValidator extends ValueObjectValidator {
    * @private
    */
   __validateUrlTemplate(object) {
-    if (!isNull(object.urlTemplate())) {
+    assert(
+      new StringValidator().validateNotNull(object.urlTemplate()),
+      'RouteValidator:urlTemplate: `urlTemplate` should be not null'
+    )
+
+    assert(
+      new StringValidator().validateRegex(object.urlTemplate(), new RegExp(/^\//)),
+      'RouteValidator:urlTemplate: `urlTemplate` should test `^/` : `%s` given',
+      object.urlTemplate()
+    )
+
+    if (object.urlTemplate().length > 1) {
       assert(
-        new StringValidator().validateRegex(object.urlTemplate(), new RegExp(/^\//)),
-        'RouteValidator:templateUrl: `value` should test `^/` : `%s` given',
+        new StringValidator().validateRegex(object.urlTemplate(), new RegExp(/(?<!\/)$/)),
+        'RouteValidator:urlTemplate: `urlTemplate` should test `/$` : `%s` given',
         object.urlTemplate()
       )
-      if (object.urlTemplate().length > 1) {
-        assert(
-          new StringValidator().validateRegex(object.urlTemplate(), new RegExp(/(?<!\/)$/)),
-          'RouteValidator:templateUrl: `value` should test `/$` : `%s` given',
-          object.urlTemplate()
-        )
-      }
     }
+
   }
 }

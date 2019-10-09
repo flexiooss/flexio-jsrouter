@@ -3,19 +3,23 @@ import {assertType} from '@flexio-oss/assert'
 import {PathnameBuilderFrom} from './URL/PathnameBuilderFrom'
 import {FlexUrl} from '@flexio-oss/extended-flex-types'
 import {TypeCheck} from './TypeCheck'
-import {RouteHandler} from './Route/RouteHandler'
+import {PublicRouteHandler} from './PublicRouteHandler'
+import {RoutesCompiledHandler} from './Route/RoutesCompiledHandler'
+import {RoutesHandler} from './Route/RoutesHandler'
 
 /**
  *
  * @class Router
+ * @implements {RoutesHandler}
  *
  */
-export class Router {
+export class Router extends RoutesHandler {
   /**
    * @param {UrlConfiguration} urlConfiguration
-   * @param {RouteHandler} routesHandler
+   * @param {RoutesCompiledHandler} routesHandler
    */
   constructor(urlConfiguration) {
+    super()
     assertType(
       TypeCheck.isUrlConfiguration(urlConfiguration),
       'Router: `urlConfiguration` argument should be an instance of UrlConfiguration'
@@ -29,10 +33,10 @@ export class Router {
     this.__urlConfiguration = urlConfiguration
     /**
      *
-     * @type {RouteHandler}
+     * @type {RoutesCompiledHandler}
      * @private
      */
-    this.__routesHandler = new RouteHandler(urlConfiguration)
+    this.__routesHandler = new RoutesCompiledHandler(urlConfiguration)
 
     /**
      *
@@ -70,11 +74,10 @@ export class Router {
   /**
    *
    * @param {Route} route
-   * @return {Router}
+   * @return {PublicRouteHandler}
    */
   addRoute(route) {
-    this.__routesHandler.addRoute(route)
-    return this
+    return this.__routesHandler.addRoute(route)
   }
 
   /**
@@ -89,7 +92,7 @@ export class Router {
 
   /**
    *
-   * @param name
+   * @param {string} name
    * @return {Route}
    */
   route(name) {

@@ -1,7 +1,8 @@
 import {Router} from './Router'
 import {ALREADY_EXISTS, NOT_FOUND, RouteException} from './Route/RouteException'
-import {RouteHandler} from './Route/RouteHandler'
+import {RoutesCompiledHandler} from './Route/RoutesCompiledHandler'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
+import {RoutesHandler} from './Route/RoutesHandler'
 
 export class TypeCheck {
   /**
@@ -63,8 +64,8 @@ export class TypeCheck {
    * @param {*} instance
    * @return {boolean}
    */
-  static isRouteHandler(instance) {
-    return instance instanceof RouteHandler
+  static isRoutesCompiledHandler(instance) {
+    return instance instanceof RoutesCompiledHandler
   }
 
   /**
@@ -83,6 +84,15 @@ export class TypeCheck {
    */
   static isRouteWithParams(instance) {
     return instance instanceof globalFlexioImport.io.flexio.js_router.types.RouteWithParams
+  }
+
+  /**
+   *
+   * @param {*} instance
+   * @return {boolean}
+   */
+  static isRoutesHandler(instance) {
+    return instance instanceof RoutesHandler
   }
 
 }

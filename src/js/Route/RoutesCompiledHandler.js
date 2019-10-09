@@ -1,4 +1,4 @@
-import {assertType} from '@flexio-oss/assert'
+import {assertType, isNull} from '@flexio-oss/assert'
 import {RouteCompiledValidator} from './RouteCompiledValidator'
 import {UrlTemplateRegexp} from '../TemplateUrl/UrlTemplateRegexp'
 import {PathnameParser} from '../PathnameParser'
@@ -6,12 +6,20 @@ import {RouteException} from './RouteException'
 import {TypeCheck} from '../TypeCheck'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import {RouteValidator} from './RouteValidator'
+import {RouteParentWalker} from './RouteParentWalker'
+import {RoutesHandler} from './RoutesHandler'
+import {PublicRouteHandler} from '../PublicRouteHandler'
 
-export class RouteHandler {
+/**
+ *
+ * @implements {RoutesHandler}
+ */
+export class RoutesCompiledHandler extends RoutesHandler {
   /**
    * @param {UrlConfiguration} urlConfiguration
    */
   constructor(urlConfiguration) {
+    super()
     /**
      *
      * @type {UrlConfiguration}
@@ -46,11 +54,11 @@ export class RouteHandler {
   /**
    *
    * @param {Route} route
-   * @return {RouteHandler}
+   * @return {PublicRouteHandler}
    */
   addRoute(route) {
     assertType(TypeCheck.isRoute(route),
-      'js-srouter:RoutesHandler:addRoute : `route` argument should be an instance of Route')
+      'js-srouter:RoutesCompiledHandler:addRoute : `route` argument should be an instance of Route')
 
     new RouteValidator().isValid(route)
 
@@ -61,16 +69,22 @@ export class RouteHandler {
       throw RouteException.ALREADY_EXISTS(route.name())
     }
 
-    return this.__registerRoute(route)
+    return new PublicRouteHandler(
+      this.__registerRoute(route).route(),
+      this
+    )
+
   }
 
   /**
    *
    * @param {Route} route
-   * @return {RouteHandler}
+   * @return {RouteCompiled}
    * @private
    */
   __registerRoute(route) {
+
+    route = this.__ensureHierarchicalUrlTemplate(route)
 
     const routeCompiled = new globalFlexioImport.io.flexio.js_router.types.RouteCompiledBuilder()
       .route(route)
@@ -84,13 +98,35 @@ export class RouteHandler {
       route.name(),
       routeCompiled
     )
-    return this
+
+    return routeCompiled
+  }
+
+  /**
+   *
+   * @param {Route} route
+   * @return {Route}
+   * @private
+   */
+  __ensureHierarchicalUrlTemplate(route) {
+    if (isNull(route.parent())) {
+      return route
+    }
+
+    return globalFlexioImport.io.flexio.js_router.types.RouteBuilder.from(route)
+      .urlTemplate(
+        new RouteParentWalker(route, this)
+          .map(route => route.urlTemplate())
+          .reverse()
+          .join())
+      .build()
+
   }
 
   /**
    *
    * @param {string} name
-   * @return {RouteHandler}
+   * @return {RoutesCompiledHandler}
    */
   removeRoute(name) {
     this.__routes.delete(name)
