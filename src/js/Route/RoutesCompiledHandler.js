@@ -90,7 +90,11 @@ export class RoutesCompiledHandler extends RoutesHandler {
       .RouteCompiledBuilder()
       .route(route)
       .urlTemplate(urlTemplate)
-      .regexp(UrlTemplateRegexp.regexpFromUrlTemplate(urlTemplate))
+      .regexp(
+        new globalFlexioImport.io.flexio.extended_flex_types.FlexRegExpBuilder()
+          .value(UrlTemplateRegexp.regexpFromUrlTemplate(urlTemplate))
+          .build()
+      )
       .build()
 
     new RouteCompiledValidator().isValid(routeCompiled)
@@ -118,6 +122,7 @@ export class RoutesCompiledHandler extends RoutesHandler {
       .map(route => route.urlTemplate())
       .reverse()
       .join('')
+      .replace(/^\/\//, '/')
 
   }
 
@@ -166,7 +171,7 @@ export class RoutesCompiledHandler extends RoutesHandler {
 
     this.__routes.forEach((routeCompiled) => {
 
-      let matches = new PathnameParser(pathname, this.__urlConfiguration).execWith(routeCompiled.regexp())
+      let matches = new PathnameParser(pathname, this.__urlConfiguration).execWith(routeCompiled.regexp().value())
 
       if (isFound === false && matches !== null) {
         route = routeCompiled.route()
