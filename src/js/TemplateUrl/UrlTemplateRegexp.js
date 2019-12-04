@@ -26,7 +26,7 @@ export class UrlTemplateRegexp {
   /**
    *
    * @param {string} urlTemplate
-   * @param {Object} routeParameter
+   * @param {ObjectValue} routeParameter
    * @return {Pathname}
    * @constructor
    * @static
@@ -143,7 +143,7 @@ export class UrlTemplateRegexp {
   /**
    *
    * @param {string} urlTemplate
-   * @param {Object} routeParameter
+   * @param {ObjectValue} routeParameter
    * @return {Pathname}
    */
   __templateToPathname(urlTemplate, routeParameter) {
@@ -175,11 +175,11 @@ export class UrlTemplateRegexp {
   /**
    *
    * @param {string} key
-   * @param {Object<string,*>} obj
+   * @param {ObjectValue} obj
    * @return {string}
    * @private
    */
   __getValueByKey(key, obj) {
-    return obj[key].toString()
+    return obj.stringValue(key)
   }
 }
