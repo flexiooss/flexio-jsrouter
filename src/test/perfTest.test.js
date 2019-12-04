@@ -29,7 +29,7 @@ class perfTest extends TestCase {
   testMapForeachLoop() {
     const map = new Map(this.__a)
     const timeIn = new Date().getTime()
-    var founded = false
+    let founded = false
     map.forEach((v) => {
       if (founded === false && v === 'string_99998') {
         this._t.push(v)

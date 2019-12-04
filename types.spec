@@ -19,4 +19,5 @@ Pathname:
 RouteCompiled:
   route: $Route
   urlTemplate: string
-  regexp: object
+  regexp:
+    $value-object: io.flexio.extended_flex_types.FlexRegExp

@@ -204,9 +204,8 @@ export class TestRouterWithPathname extends TestCase {
 
     const routeWithParams1 = this.router.routeByUrl(testUrl)
 
-    assert.deepStrictEqual(routeWithParams1.params(),
-      {pageName: 'bibi', pageId: '5'}
-    )
+    assert.deepStrictEqual(routeWithParams1.params().stringValue('pageName'), 'bibi')
+    assert.deepStrictEqual(routeWithParams1.params().stringValue('pageId'), '5')
 
     const testUrl2 = globalFlexioImport.io.flexio.extended_flex_types.FlexUrlBuilder
       .fromURL(new URLExtended('pathname/firstRoute/bibi/5?toto=abc&truc=bof#42', 'https://localhost:8080'))
@@ -214,25 +213,20 @@ export class TestRouterWithPathname extends TestCase {
 
     const routeWithParams2 = this.router.routeByUrl(testUrl2)
 
-    assert.deepStrictEqual(routeWithParams2.params(),
-      {pageName: 'bibi', pageId: '5'}
-    )
+    assert.deepStrictEqual(routeWithParams2.params().stringValue('pageName'), 'bibi')
+    assert.deepStrictEqual(routeWithParams2.params().stringValue('pageId'), '5')
 
     const routeWithParams3 = this.router.routeByUrl(testUrl)
 
-    assert.deepStrictEqual(routeWithParams3.params(),
-      {pageName: 'bibi', pageId: '5'}
-    )
+    assert.deepStrictEqual(routeWithParams3.params().stringValue('pageName'), 'bibi')
+    assert.deepStrictEqual(routeWithParams3.params().stringValue('pageId'), '5')
 
     const testUrl4 = globalFlexioImport.io.flexio.extended_flex_types.FlexUrlBuilder
       .fromURL(new URLExtended('pathname/', 'https://localhost:8080'))
       .build()
     const routeWithParams4 = this.router.routeByUrl(testUrl4)
 
-    assert.deepStrictEqual(routeWithParams4.params(),
-      {}
-    )
-
+    assert.deepStrictEqual(routeWithParams4.params().size(), 0)
   }
 
   testNotFound() {

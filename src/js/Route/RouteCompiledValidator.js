@@ -1,5 +1,5 @@
-import {isRegex, assertType, isNull, assert} from '@flexio-oss/assert'
-import {ValueObjectValidator, StringValidator} from '@flexio-oss/js-validator-helper'
+import {assert} from '@flexio-oss/assert'
+import {StringValidator, ValueObjectValidator} from '@flexio-oss/js-validator-helper'
 
 export class RouteCompiledValidator extends ValueObjectValidator {
 
@@ -10,22 +10,6 @@ export class RouteCompiledValidator extends ValueObjectValidator {
    */
   isValid(object) {
     this.__validateUrlTemplate(object)
-    this.__validateRegexp(object)
-  }
-
-  /**
-   *
-   * @param {RouteCompiled} object
-   * @return {boolean}
-   * @private
-   */
-  __validateRegexp(object) {
-    if (!isNull(object.regexp())) {
-      assertType(
-        isRegex(object.regexp()),
-        'RouteCompiledValidator `regexp` argument should be a regexp'
-      )
-    }
   }
 
   /**

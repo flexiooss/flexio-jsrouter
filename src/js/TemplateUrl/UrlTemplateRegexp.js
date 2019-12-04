@@ -36,6 +36,16 @@ export class UrlTemplateRegexp {
   }
 
   /**
+   * @param {string} urlTemplate
+   * @return {FlexRegExp}
+   */
+  static flexRegexpFromUrlTemplate(urlTemplate){
+    return new globalFlexioImport.io.flexio.extended_flex_types.FlexRegExpBuilder()
+      .value(UrlTemplateRegexp.regexpFromUrlTemplate(urlTemplate))
+      .build()
+  }
+
+  /**
    *
    * @param {string} urlTemplate
    * @return {RegExp}

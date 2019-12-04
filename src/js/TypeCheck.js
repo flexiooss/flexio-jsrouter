@@ -104,5 +104,4 @@ export class TypeCheck {
   static isPublicRouteHandler(instance) {
     return instance instanceof PublicRouteHandler
   }
-
 }

@@ -59,7 +59,7 @@ export class Router extends RoutesHandler {
    *
    * @return {UrlConfiguration}
    */
-  get urlConfiguration() {
+  urlConfiguration() {
     return this.__urlConfiguration
   }
 
@@ -67,7 +67,7 @@ export class Router extends RoutesHandler {
    *
    * @return {URLHandler}
    */
-  get urlHandler() {
+  urlHandler() {
     return this.__urlHandler
   }
 
@@ -106,7 +106,7 @@ export class Router extends RoutesHandler {
    * @return {FlexUrl}
    */
   urlByRouteName(name, routeParameters) {
-    return this.urlHandler.pathnameToUrl(
+    return this.urlHandler().pathnameToUrl(
       this.__routesHandler.pathnameByRouteName(
         name,
         routeParameters
