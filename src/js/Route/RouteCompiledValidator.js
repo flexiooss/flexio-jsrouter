@@ -24,19 +24,29 @@ export class RouteCompiledValidator extends ValueObjectValidator {
       'RouteCompiledValidator:urlTemplate: `urlTemplate` should be not null'
     )
 
-    assert(
-      new StringValidator().validateRegex(object.urlTemplate(), new RegExp(/^\//)),
-      'RouteCompiledValidator:urlTemplate: `urlTemplate` should test `^/` : `%s` given',
-      object.urlTemplate()
-    )
 
     if (object.urlTemplate().length > 1) {
       assert(
-        new StringValidator().validateRegex(object.urlTemplate(), new RegExp(/(?<!\/)$/)),
+        new StringValidator().validateRegex(object.urlTemplate(), new RegExp(/^\/{1}[\w\d_{}-]+[\/\w\d_{}-]+(?<!\/)$/)),
         'RouteCompiledValidator:urlTemplate: `urlTemplate` should test `/$` : `%s` given',
         object.urlTemplate()
       )
-    }
+    } else {
 
+      assert(
+        new StringValidator().validateRegex(object.urlTemplate(), new RegExp(/^\//)),
+        'RouteCompiledValidator:urlTemplate: `urlTemplate` should test `^/` : `%s` given',
+        object.urlTemplate()
+      )
+
+      if (object.urlTemplate().length > 1) {
+        assert(
+          new StringValidator().validateRegex(object.urlTemplate(), new RegExp(/(?<!\/)$/)),
+          'RouteCompiledValidator:urlTemplate: `urlTemplate` should test `/$` : `%s` given',
+          object.urlTemplate()
+        )
+      }
+
+    }
   }
 }

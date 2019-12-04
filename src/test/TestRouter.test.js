@@ -80,7 +80,8 @@ export class TestRouterTest extends TestCase {
 
   testAddSubRoute() {
 
-    const resource = this.router.addRoute(this.resource)
+    const root = this.router.addRoute(this.rootRoute)
+    const resource = root.addRoute(this.resource)
 
     const subroute1 = resource.addRoute(
       this.router
@@ -141,7 +142,8 @@ export class TestRouterTest extends TestCase {
   }
 
   testRemoveSubRoute() {
-    const resource = this.router.addRoute(this.resource)
+    const root = this.router.addRoute(this.rootRoute)
+    const resource = root.addRoute(this.resource)
 
     resource.addRoute(
       this.router
@@ -184,7 +186,8 @@ export class TestRouterTest extends TestCase {
 
   testSubUrlByName() {
 
-    const resource = this.router.addRoute(this.resource)
+    const root = this.router.addRoute(this.rootRoute)
+    const resource = root.addRoute(this.resource)
 
     const subroute1 = resource.addRoute(
       this.router
@@ -333,7 +336,8 @@ export class TestRouterTest extends TestCase {
 
   testSubRouteByUrl() {
 
-    const resource = this.router.addRoute(this.resource)
+    const root = this.router.addRoute(this.rootRoute)
+    const resource = root.addRoute(this.resource)
 
     const subroute1 = resource.addRoute(
       this.router
@@ -413,7 +417,8 @@ export class TestRouterTest extends TestCase {
 
   testSubRouteParam() {
 
-    const resource = this.router.addRoute(this.resource)
+    const root = this.router.addRoute(this.rootRoute)
+    const resource = root.addRoute(this.resource)
 
     const subroute1 = resource.addRoute(
       this.router

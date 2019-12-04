@@ -118,6 +118,7 @@ export class RoutesCompiledHandler extends RoutesHandler {
       .map(route => route.urlTemplate())
       .reverse()
       .join('')
+      .replace(/^\/\//, '/')
 
   }
 

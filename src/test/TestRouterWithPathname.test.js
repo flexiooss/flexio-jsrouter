@@ -1,5 +1,6 @@
 /* global runTest */
 import '../../generated/io/package'
+
 import {URLExtended} from '@flexio-oss/extended-flex-types'
 import {TestCase} from 'code-altimeter-js'
 import {RouterBuilder} from '../js/RouterBuilder'
