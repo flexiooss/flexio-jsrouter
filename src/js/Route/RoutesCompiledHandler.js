@@ -192,7 +192,7 @@ export class RoutesCompiledHandler extends RoutesHandler {
   /**
    *
    * @param {string} name
-   * @param {Object} routeParameters
+   * @param {ObjectValue} routeParameters
    * @return {Pathname}
    */
   pathnameByRouteName(name, routeParameters) {

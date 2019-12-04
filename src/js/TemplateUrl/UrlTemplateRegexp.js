@@ -1,5 +1,7 @@
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import {PathnameValidator} from '../URL/PathnameValidator'
+import {TypeCheck} from '@flexio-oss/flex-types'
+import {TypeCheck as PrimitiveTypeCheck} from '@flexio-oss/assert'
 
 const START_RE = '^/?'
 const PARAMETER_RE = '[^/]+'
@@ -147,6 +149,12 @@ export class UrlTemplateRegexp {
    * @return {Pathname}
    */
   __templateToPathname(urlTemplate, routeParameter) {
+
+    console.log(routeParameter)
+
+    PrimitiveTypeCheck.assertIsString(urlTemplate)
+    TypeCheck.assertIsObjectValue(routeParameter)
+
     const re = this.__getCompiledRegexp(PARAMETER_TEMPLATE_RE)
     let matches
     let pathname = urlTemplate

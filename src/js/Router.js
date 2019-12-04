@@ -6,6 +6,7 @@ import {TypeCheck} from './TypeCheck'
 import {PublicRouteHandler} from './PublicRouteHandler'
 import {RoutesCompiledHandler} from './Route/RoutesCompiledHandler'
 import {RoutesHandler} from './Route/RoutesHandler'
+import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 
 /**
  *
@@ -102,14 +103,14 @@ export class Router extends RoutesHandler {
   /**
    *
    * @param {string} name
-   * @param {Object} routeParameters
+   * @param {Object} [routeParameters={}]
    * @return {FlexUrl}
    */
-  urlByRouteName(name, routeParameters) {
+  urlByRouteName(name, routeParameters={}) {
     return this.urlHandler().pathnameToUrl(
       this.__routesHandler.pathnameByRouteName(
         name,
-        routeParameters
+        globalFlexioImport.io.flexio.flex_types.ObjectValueBuilder.fromObject(routeParameters).build()
       )
     )
   }

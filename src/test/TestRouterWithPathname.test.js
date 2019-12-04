@@ -84,7 +84,7 @@ export class TestRouterWithPathname extends TestCase {
     this.router.addRoute(this.yetAnOtherRoute)
     this.router.addRoute(this.rootRoute)
 
-    const url1 = this.router.urlByRouteName('firstRoute', {pageName: 'bibi', pageId: 5})
+    const url1 = this.router.urlByRouteName('firstRoute', {pageName: 'bibi', pageId: '5'})
 
     const expectedUrl1 = new globalFlexioImport.io.flexio.extended_flex_types.FlexUrlBuilder()
       .value('https://localhost:8080/pathname/firstRoute/bibi/5')
@@ -92,7 +92,7 @@ export class TestRouterWithPathname extends TestCase {
 
     assert.deepStrictEqual(url1, expectedUrl1, '1:should retrieve Url from name with params')
 
-    const url2 = this.router.urlByRouteName('rootRoute', null)
+    const url2 = this.router.urlByRouteName('rootRoute')
 
     const expectedUrl2 = new globalFlexioImport.io.flexio.extended_flex_types.FlexUrlBuilder()
       .value('https://localhost:8080/pathname')
