@@ -149,9 +149,6 @@ export class UrlTemplateRegexp {
    * @return {Pathname}
    */
   __templateToPathname(urlTemplate, routeParameter) {
-
-    console.log(routeParameter)
-
     PrimitiveTypeCheck.assertIsString(urlTemplate)
     TypeCheck.assertIsObjectValue(routeParameter)
 

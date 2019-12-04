@@ -3,6 +3,7 @@ import {assertType} from '@flexio-oss/assert'
 import {PathnameBuilderFrom} from './URL/PathnameBuilderFrom'
 import {FlexUrl} from '@flexio-oss/extended-flex-types'
 import {TypeCheck} from './TypeCheck'
+import {TypeCheck as PrimitiveTypeCheck } from '@flexio-oss/assert'
 import {PublicRouteHandler} from './PublicRouteHandler'
 import {RoutesCompiledHandler} from './Route/RoutesCompiledHandler'
 import {RoutesHandler} from './Route/RoutesHandler'
@@ -107,6 +108,8 @@ export class Router extends RoutesHandler {
    * @return {FlexUrl}
    */
   urlByRouteName(name, routeParameters={}) {
+    PrimitiveTypeCheck.assertIsStrictObject(routeParameters)
+
     return this.urlHandler().pathnameToUrl(
       this.__routesHandler.pathnameByRouteName(
         name,
