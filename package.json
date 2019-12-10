@@ -13,7 +13,13 @@
     "code-altimeter-js": "https://github.com/flexiooss/code-altimeter-js.git"
   },
   "peerDependencies": {
-    "@flexio-oss/js-validator-helper": ">0.0.0"
+    "@flexio-oss/js-validator-helper": ">0.0.0",
+    "@flexio-oss/flex-types": ">0.0.0",
+    "@flexio-oss/extended-flex-types": ">0.0.0",
+    "@flexio-oss/assert": ">0.0.0",
+    "@flexio-oss/global-import-registry": ">0.0.0",
+    "@flexio-oss/js-generator-helpers": ">0.0.0",
+    "@flexio-oss/js-style-theme-interface": ">0.0.0"
   },
   "hotballoon-shed": {
     "build": {

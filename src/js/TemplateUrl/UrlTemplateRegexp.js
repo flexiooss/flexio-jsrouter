@@ -1,5 +1,7 @@
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import {PathnameValidator} from '../URL/PathnameValidator'
+import {TypeCheck} from '@flexio-oss/flex-types'
+import {TypeCheck as PrimitiveTypeCheck} from '@flexio-oss/assert'
 
 const START_RE = '^/?'
 const PARAMETER_RE = '[^/]+'
@@ -26,13 +28,23 @@ export class UrlTemplateRegexp {
   /**
    *
    * @param {string} urlTemplate
-   * @param {Object} routeParameter
+   * @param {ObjectValue} routeParameter
    * @return {Pathname}
    * @constructor
    * @static
    */
   static pathnameFromUrlTemplate(urlTemplate, routeParameter) {
     return new this().__templateToPathname(urlTemplate, routeParameter)
+  }
+
+  /**
+   * @param {string} urlTemplate
+   * @return {FlexRegExp}
+   */
+  static flexRegexpFromUrlTemplate(urlTemplate){
+    return new globalFlexioImport.io.flexio.extended_flex_types.FlexRegExpBuilder()
+      .value(UrlTemplateRegexp.regexpFromUrlTemplate(urlTemplate))
+      .build()
   }
 
   /**
@@ -133,10 +145,13 @@ export class UrlTemplateRegexp {
   /**
    *
    * @param {string} urlTemplate
-   * @param {Object} routeParameter
+   * @param {ObjectValue} routeParameter
    * @return {Pathname}
    */
   __templateToPathname(urlTemplate, routeParameter) {
+    PrimitiveTypeCheck.assertIsString(urlTemplate)
+    TypeCheck.assertIsObjectValue(routeParameter)
+
     const re = this.__getCompiledRegexp(PARAMETER_TEMPLATE_RE)
     let matches
     let pathname = urlTemplate
@@ -165,11 +180,11 @@ export class UrlTemplateRegexp {
   /**
    *
    * @param {string} key
-   * @param {Object<string,*>} obj
+   * @param {ObjectValue} obj
    * @return {string}
    * @private
    */
   __getValueByKey(key, obj) {
-    return obj[key].toString()
+    return obj.stringValue(key)
   }
 }

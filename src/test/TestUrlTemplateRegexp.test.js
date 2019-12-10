@@ -30,7 +30,10 @@ export class TestUrlTemplateRegexpTest extends TestCase {
 
   testTemplateToPathname() {
     const urlTemplate = '/page/{category}/{pageId}'
-    const pathname = UrlTemplateRegexp.pathnameFromUrlTemplate(urlTemplate, {category: 'bobo', pageId: 7})
+    const pathname = UrlTemplateRegexp.pathnameFromUrlTemplate(urlTemplate, globalFlexioImport.io.flexio.flex_types.ObjectValueBuilder.fromObject({
+      category: 'bobo',
+      pageId: '7'
+    }).build())
     console.log(pathname)
 
     const expectedPathname = new globalFlexioImport.io.flexio.js_router.types

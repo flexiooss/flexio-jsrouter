@@ -47,7 +47,7 @@ export class RoutesCompiledHandler extends RoutesHandler {
    *
    * @return {Map<string, RouteCompiled>}
    */
-  get routes() {
+  routes() {
     return this.__routes
   }
 
@@ -90,11 +90,7 @@ export class RoutesCompiledHandler extends RoutesHandler {
       .RouteCompiledBuilder()
       .route(route)
       .urlTemplate(urlTemplate)
-      .regexp(
-        new globalFlexioImport.io.flexio.extended_flex_types.FlexRegExpBuilder()
-          .value(UrlTemplateRegexp.regexpFromUrlTemplate(urlTemplate))
-          .build()
-      )
+      .regexp(UrlTemplateRegexp.flexRegexpFromUrlTemplate(urlTemplate))
       .build()
 
     new RouteCompiledValidator().isValid(routeCompiled)
@@ -171,11 +167,14 @@ export class RoutesCompiledHandler extends RoutesHandler {
 
     this.__routes.forEach((routeCompiled) => {
 
-      let matches = new PathnameParser(pathname, this.__urlConfiguration).execWith(routeCompiled.regexp().value())
+      const matches = new PathnameParser(pathname, this.__urlConfiguration).execWith(routeCompiled.regexp().value())
 
       if (isFound === false && matches !== null) {
         route = routeCompiled.route()
-        params = Object.assign({}, matches.groups)
+        params = globalFlexioImport.io.flexio.flex_types
+          .ObjectValue
+          .fromObject(Object.assign({}, matches.groups))
+          .build()
         isFound = true
       }
     })
@@ -193,7 +192,7 @@ export class RoutesCompiledHandler extends RoutesHandler {
   /**
    *
    * @param {string} name
-   * @param {Object} routeParameters
+   * @param {ObjectValue} routeParameters
    * @return {Pathname}
    */
   pathnameByRouteName(name, routeParameters) {

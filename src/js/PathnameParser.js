@@ -38,7 +38,7 @@ export class PathnameParser {
    *
    * @return {Pathname}
    */
-  get pathname() {
+  pathname() {
     return this.__pathname
   }
 
@@ -48,10 +48,10 @@ export class PathnameParser {
    * @return {?RegExpMatchArray}
    */
   execWith(regexp) {
-    let realPathname = this.pathname.value()
+    let realPathname = this.pathname().value()
 
     if (this.__urlConfigurationHandler.pathnameString() !== '') {
-      realPathname = this.pathname.value().replace(
+      realPathname = this.pathname().value().replace(
         this.__urlConfigurationHandler.pathnameString().replace(/\/$/, ''),
         ''
       )
@@ -68,7 +68,6 @@ export class PathnameParser {
   }
 
   __resetRegexp(regexp) {
-    // regexp.lastIndex = 0
     return regexp
   }
 }

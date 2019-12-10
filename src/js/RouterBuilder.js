@@ -31,5 +31,4 @@ export class RouterBuilder {
   static urlConfigurationBuilderFromLocation(location) {
     return UrlConfigurationBuilderFrom.Location(location)
   }
-
 }
