@@ -7,7 +7,7 @@
   "author": "Thomas Chatelain (https://github.com/TomAchT)",
   "license": "Apache-2.0",
   "dependencies": {
-    "@flexio-corp/js-common-parent": "0.0.0"
+    "@flexio-corp/js-common-parent": "0.1.0-dev"
   },
   "devDependencies": {
     "code-altimeter-js": "https://github.com/flexiooss/code-altimeter-js.git"
