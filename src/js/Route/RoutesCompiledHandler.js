@@ -10,6 +10,7 @@ import {RouteParentWalker} from './RouteParentWalker'
 import {RoutesHandler} from './RoutesHandler'
 import {PublicRouteHandler} from '../PublicRouteHandler'
 
+
 /**
  *
  * @implements {RoutesHandler}
@@ -62,10 +63,7 @@ export class RoutesCompiledHandler extends RoutesHandler {
 
     new RouteValidator().isValid(route)
 
-    if (
-
-      this.__routes.has(route.name())
-    ) {
+    if (this.__routes.has(route.name())) {
       throw RouteException.ALREADY_EXISTS(route.name())
     }
 
@@ -161,23 +159,56 @@ export class RoutesCompiledHandler extends RoutesHandler {
    * @throws {RouteException}
    */
   routeByPathname(pathname) {
+    /**
+     *
+     * @type {?Route}
+     */
     let route = null
+    /**
+     *
+     * @type {?ObjectValue}
+     */
     let params = null
+    /**
+     *
+     * @type {boolean}
+     */
     let isFound = false
 
-    this.__routes.forEach((routeCompiled) => {
-
+    for (const routeKeyVal of this.__routes) {
+      /**
+       *
+       * @type {RouteCompiled}
+       */
+      const routeCompiled = routeKeyVal[1]
+      /**
+       *
+       * @type {?RegExpMatchArray}
+       */
       const matches = new PathnameParser(pathname, this.__urlConfiguration).execWith(routeCompiled.regexp().value())
 
       if (isFound === false && matches !== null) {
+
         route = routeCompiled.route()
+        /**
+         *
+         * @type {?StringArray}
+         */
+        const namedGroups = routeCompiled.regexp().namedGroups()
+        let parameters = {}
+
+        for (let i = 0; i < namedGroups.length; ++i) {
+          parameters[namedGroups[i]] = matches[i + 1]
+        }
+
         params = globalFlexioImport.io.flexio.flex_types
           .ObjectValue
-          .fromObject(Object.assign({}, matches.groups))
+          .fromObject(parameters)
           .build()
         isFound = true
+        break
       }
-    })
+    }
 
     if (!isFound) {
       throw RouteException.NOT_FOUND(pathname.value())
@@ -205,7 +236,7 @@ export class RoutesCompiledHandler extends RoutesHandler {
 
     return UrlTemplateRegexp
       .pathnameFromUrlTemplate(
-        routeCompiled.urlTemplate(),
+        routeCompiled,
         routeParameters
       )
   }

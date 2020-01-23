@@ -4,7 +4,9 @@ import {TestCase} from 'code-altimeter-js'
 import {UrlTemplateRegexp} from '../js/TemplateUrl/UrlTemplateRegexp'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 
+
 const assert = require('assert')
+
 
 /**
  * @extends TestCase
@@ -12,17 +14,25 @@ const assert = require('assert')
 export class TestUrlTemplateRegexpTest extends TestCase {
   testTemplateToRegexp() {
     const urlTemplate = 'page/{category}/{pageId}'
-    const re = UrlTemplateRegexp.regexpFromUrlTemplate(urlTemplate)
+    const flexRe = UrlTemplateRegexp.flexRegexpFromUrlTemplate(urlTemplate)
+    const re = flexRe.value()
     const url = 'page/bobo/7/'
+
     const matches = re.exec(url)
 
+    assert.deepStrictEqual(
+      ['category', 'pageId'],
+      flexRe.namedGroups().toArray(),
+      'should have ordered params'
+    )
+
     assert.strictEqual(
-      matches.groups.category,
+      matches[1],
       'bobo',
       'should retrieve first Pathname parameters'
     )
     assert.strictEqual(
-      matches.groups.pageId,
+      matches[2],
       '7',
       'should retrieve 2nd Pathname parameters'
     )
@@ -30,10 +40,23 @@ export class TestUrlTemplateRegexpTest extends TestCase {
 
   testTemplateToPathname() {
     const urlTemplate = '/page/{category}/{pageId}'
-    const pathname = UrlTemplateRegexp.pathnameFromUrlTemplate(urlTemplate, globalFlexioImport.io.flexio.flex_types.ObjectValueBuilder.fromObject({
-      category: 'bobo',
-      pageId: '7'
-    }).build())
+    //TODO: route compiled
+    const pathname = UrlTemplateRegexp.pathnameFromUrlTemplate(
+      new globalFlexioImport.io.flexio.js_router.types
+        .RouteCompiledBuilder()
+        .urlTemplate(urlTemplate)
+        .regexp(
+          new globalFlexioImport.io.flexio.extended_flex_types.FlexRegExpBuilder().namedGroups(
+            new globalFlexioImport.io.flexio.flex_types.arrays.StringArray('category', 'pageId')
+          ).build()
+        )
+        .build(),
+      globalFlexioImport.io.flexio.flex_types
+        .ObjectValueBuilder
+        .fromObject({
+          category: 'bobo',
+          pageId: '7'
+        }).build())
     console.log(pathname)
 
     const expectedPathname = new globalFlexioImport.io.flexio.js_router.types
@@ -48,5 +71,6 @@ export class TestUrlTemplateRegexpTest extends TestCase {
     )
   }
 }
+
 
 runTest(TestUrlTemplateRegexpTest)
