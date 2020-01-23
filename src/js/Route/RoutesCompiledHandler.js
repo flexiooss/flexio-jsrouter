@@ -3,7 +3,6 @@ import {RouteCompiledValidator} from './RouteCompiledValidator'
 import {UrlTemplateRegexp} from '../TemplateUrl/UrlTemplateRegexp'
 import {PathnameParser} from '../PathnameParser'
 import {RouteException} from './RouteException'
-import {TypeCheck} from '../TypeCheck'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import {RouteValidator} from './RouteValidator'
 import {RouteParentWalker} from './RouteParentWalker'
@@ -58,7 +57,7 @@ export class RoutesCompiledHandler extends RoutesHandler {
    * @return {PublicRouteHandler}
    */
   addRoute(route) {
-    assertType(TypeCheck.isRoute(route),
+    assertType(route instanceof globalFlexioImport.io.flexio.js_router.types.Route,
       'js-srouter:RoutesCompiledHandler:addRoute : `route` argument should be an instance of Route')
 
     new RouteValidator().isValid(route)

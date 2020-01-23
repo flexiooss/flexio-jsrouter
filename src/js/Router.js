@@ -2,12 +2,12 @@ import {URLHandler} from './URL/URLHandler'
 import {assertType} from '@flexio-oss/assert'
 import {PathnameBuilderFrom} from './URL/PathnameBuilderFrom'
 import {FlexUrl} from '@flexio-oss/extended-flex-types'
-import {TypeCheck} from './TypeCheck'
-import {TypeCheck as PrimitiveTypeCheck } from '@flexio-oss/assert'
+import {TypeCheck as PrimitiveTypeCheck} from '@flexio-oss/assert'
 import {PublicRouteHandler} from './PublicRouteHandler'
 import {RoutesCompiledHandler} from './Route/RoutesCompiledHandler'
 import {RoutesHandler} from './Route/RoutesHandler'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
+
 
 /**
  *
@@ -18,12 +18,11 @@ import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 export class Router extends RoutesHandler {
   /**
    * @param {UrlConfiguration} urlConfiguration
-   * @param {RoutesCompiledHandler} routesHandler
    */
   constructor(urlConfiguration) {
     super()
     assertType(
-      TypeCheck.isUrlConfiguration(urlConfiguration),
+      urlConfiguration instanceof globalFlexioImport.io.flexio.js_router.types.UrlConfiguration,
       'Router: `urlConfiguration` argument should be an instance of UrlConfiguration'
     )
 
@@ -107,7 +106,7 @@ export class Router extends RoutesHandler {
    * @param {Object} [routeParameters={}]
    * @return {FlexUrl}
    */
-  urlByRouteName(name, routeParameters={}) {
+  urlByRouteName(name, routeParameters = {}) {
     PrimitiveTypeCheck.assertIsStrictObject(routeParameters)
 
     return this.urlHandler().pathnameToUrl(
