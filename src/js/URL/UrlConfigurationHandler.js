@@ -1,7 +1,9 @@
 import {isNull, assertType, assert} from '@flexio-oss/assert'
-import {TypeCheck} from '../TypeCheck'
+import {globalFlexioImport} from '@flexio-oss/global-import-registry'
+
 
 const __urlConfiguration = Symbol('__urlConfiguration')
+
 
 export class UrlConfigurationHandler {
   /**
@@ -10,7 +12,7 @@ export class UrlConfigurationHandler {
    */
   constructor(urlConfiguration) {
     assertType(
-      TypeCheck.isUrlConfiguration(urlConfiguration),
+      urlConfiguration instanceof globalFlexioImport.io.flexio.js_router.types.UrlConfiguration,
       'UrlConfigurationHandler `urlConfiguration` argument should be a UrlConfiguration'
     )
     /**

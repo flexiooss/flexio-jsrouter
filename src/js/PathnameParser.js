@@ -1,6 +1,7 @@
 import {assert} from '@flexio-oss/assert'
-import {TypeCheck} from './TypeCheck'
 import {UrlConfigurationHandler} from './URL/UrlConfigurationHandler'
+import {globalFlexioImport} from '@flexio-oss/global-import-registry'
+
 
 export class PathnameParser {
   /**
@@ -10,7 +11,7 @@ export class PathnameParser {
    */
   constructor(pathname, urlConfiguration) {
     assert(
-      TypeCheck.isPathname(pathname),
+      pathname instanceof globalFlexioImport.io.flexio.js_router.types.Pathname,
       'PathParser:constructor: `pathname` argument should be an instance of Pathname, `%s` given',
       typeof pathname
     )
@@ -22,7 +23,7 @@ export class PathnameParser {
     this.__pathname = pathname
 
     assert(
-      TypeCheck.isUrlConfiguration(urlConfiguration),
+      urlConfiguration instanceof globalFlexioImport.io.flexio.js_router.types.UrlConfiguration,
       'PathParser:constructor: `urlConfiguration` argument should be an instance of UrlConfiguration, `%s` given',
       typeof urlConfiguration
     )
