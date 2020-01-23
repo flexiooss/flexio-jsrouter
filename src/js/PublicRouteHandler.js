@@ -1,7 +1,7 @@
 import {assertType, isNull} from '@flexio-oss/assert'
-import {TypeCheck} from './TypeCheck'
 import {globalFlexioImport} from '@flexio-oss/global-import-registry'
 import {RouteValidator} from './Route/RouteValidator'
+import {RoutesHandler} from './Route/RoutesHandler'
 
 const __route = Symbol('__route')
 const __routesHandler = Symbol('__routesHandler')
@@ -14,11 +14,11 @@ export class PublicRouteHandler {
    */
   constructor(route, routesHandler) {
     assertType(
-      TypeCheck.isRoute(route),
+      route instanceof globalFlexioImport.io.flexio.js_router.types.Route,
       'PublicRouteHandler:constructor: `route` argument should be a Route'
     )
     assertType(
-      TypeCheck.isRoutesHandler(routesHandler),
+      routesHandler instanceof RoutesHandler,
       'PublicRouteHandler:constructor: `routesHandler` argument should be a RoutesHandler'
     )
     this[__route] = route
