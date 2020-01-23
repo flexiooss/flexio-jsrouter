@@ -45,11 +45,11 @@ export class RouteValidator extends ValueObjectValidator {
     )
 
     if (object.urlTemplate().length > 1) {
-//      assert(
-//        new StringValidator().validateRegex(object.urlTemplate(), new RegExp(/(?<!\/)$/)),
-//        'RouteValidator:urlTemplate: `urlTemplate` should test `/$` : `%s` given',
-//        object.urlTemplate()
-//      )
+      assert(
+        !( new StringValidator().validateRegex(object.urlTemplate(), new RegExp(/.*\/$/))),
+        'RouteValidator:urlTemplate: `urlTemplate` should test `/$` : `%s` given',
+        object.urlTemplate()
+      )
     }
 
   }
