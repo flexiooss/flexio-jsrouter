@@ -48,7 +48,14 @@ export class UrlConfigurationHandler {
    */
   __pathnameClean() {
     if (!isNull(this[__urlConfiguration].pathname())) {
-      return `/${this[__urlConfiguration].pathname().replace(/\//, '')}/`
+      let path = this[__urlConfiguration].pathname()
+      if (!path.startsWith('/')) {
+        path = '/' + path
+      }
+      if (!path.endsWith('/')) {
+        path = path + '/'
+      }
+      return path
     }
     return ''
   }
