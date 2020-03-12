@@ -1,83 +1,84 @@
-import {PathNameParser} from './PathNameParser'
 import {URLHandler} from './URL/URLHandler'
-import {BrowserLocation} from './BrowserLocation'
-import {assert} from '@flexio-oss/assert'
-import {UrlConfiguration} from './UrlConfiguration'
+import {assertType} from '@flexio-oss/assert'
+import {PathnameBuilderFrom} from './URL/PathnameBuilderFrom'
+import {FlexUrl} from '@flexio-oss/extended-flex-types'
+import {TypeCheck as PrimitiveTypeCheck} from '@flexio-oss/assert'
+import {PublicRouteHandler} from './PublicRouteHandler'
+import {RoutesCompiledHandler} from './Route/RoutesCompiledHandler'
+import {RoutesHandler} from './Route/RoutesHandler'
+import {globalFlexioImport} from '@flexio-oss/global-import-registry'
+
 
 /**
  *
  * @class Router
+ * @implements {RoutesHandler}
  *
  */
-export class Router {
+export class Router extends RoutesHandler {
   /**
    * @param {UrlConfiguration} urlConfiguration
-   * @param {RouteHandler} routesHandler
    */
-  constructor(urlConfiguration, routesHandler) {
-    assert(
-      urlConfiguration instanceof UrlConfiguration,
+  constructor(urlConfiguration) {
+    super()
+    assertType(
+      urlConfiguration instanceof globalFlexioImport.io.flexio.js_router.types.UrlConfiguration,
       'Router: `urlConfiguration` argument should be an instance of UrlConfiguration'
     )
+
     /**
      *
      * @type {UrlConfiguration}
      * @private
      */
-    this._urlConfiguration = urlConfiguration
+    this.__urlConfiguration = urlConfiguration
     /**
      *
-     * @type {RouteHandler}
+     * @type {RoutesCompiledHandler}
      * @private
      */
-    this._routesHandler = routesHandler
+    this.__routesHandler = new RoutesCompiledHandler(urlConfiguration)
+
     /**
      *
      * @type {URLHandler}
      * @private
      */
-    this._urlHandler = new URLHandler(this._urlConfiguration)
-    /**
-     *
-     * @type {BrowserLocation}
-     * @private
-     */
-    this._browserLocation = new BrowserLocation()
-    this._PathParser = PathNameParser
+    this.__urlHandler = new URLHandler(this.__urlConfiguration)
+
+  }
+
+  /**
+   *
+   * @return {RouteBuilder}
+   */
+  routeBuilder() {
+    return this.__routesHandler.routeBuilder()
   }
 
   /**
    *
    * @return {UrlConfiguration}
    */
-  get urlConfiguration() {
-    return this._urlConfiguration
+  urlConfiguration() {
+    return this.__urlConfiguration
   }
 
   /**
    *
    * @return {URLHandler}
    */
-  get urlHandler() {
-    return this._urlHandler
-  }
-
-  /**
-   *
-   * @return {BrowserLocation}
-   */
-  get browserLocation() {
-    return this._browserLocation
+  urlHandler() {
+    return this.__urlHandler
   }
 
   /**
    *
    * @param {Route} route
-   * @return {Router}
+   * @return {PublicRouteHandler}
    */
   addRoute(route) {
-    this._routesHandler.addRoute(route)
-    return this
+    return this.__routesHandler.addRoute(route)
   }
 
   /**
@@ -86,42 +87,48 @@ export class Router {
    * @return {Router}
    */
   removeRoute(name) {
-    this._routesHandler.removeRoute(name)
+    this.__routesHandler.removeRoute(name)
     return this
   }
 
   /**
    *
-   * @param name
+   * @param {string} name
    * @return {Route}
    */
   route(name) {
-    return this._routesHandler.route(name)
+    return this.__routesHandler.route(name)
   }
 
   /**
    *
    * @param {string} name
-   * @param {Object} routeParameters
-   * @param {?PartialUrl} partialUrl
-   * @return {URLExtended}
+   * @param {Object} [routeParameters={}]
+   * @return {FlexUrl}
    */
-  urlByRouteName(name, routeParameters, partialUrl) {
-    // TODO handle partialUrl
-    return this.urlHandler.pathnameToUrl(
-      this._routesHandler.pathnameByRouteName(
+  urlByRouteName(name, routeParameters = {}) {
+    PrimitiveTypeCheck.assertIsStrictObject(routeParameters)
+
+    return this.urlHandler().pathnameToUrl(
+      this.__routesHandler.pathnameByRouteName(
         name,
-        routeParameters)
+        globalFlexioImport.io.flexio.flex_types.ObjectValueBuilder.fromObject(routeParameters).build()
+      )
     )
   }
 
   /**
    *
-   * @param {PathName} pathname
+   * @param {FlexUrl} url
    * @return {RouteWithParams}
-   * @throws {RouteNotFoundException}
+   * @throws {RouteException}
    */
-  routeByPathname(pathname) {
-    return this._routesHandler.routeByPathname(pathname)
+  routeByUrl(url) {
+    return this.__routesHandler
+      .routeByPathname(
+        PathnameBuilderFrom
+          .FlexUrl(url)
+          .build()
+      )
   }
 }

@@ -1,5 +1,10 @@
-import {PathName} from '../URL/PathName'
+import {globalFlexioImport} from '@flexio-oss/global-import-registry'
+import {PathnameValidator} from '../URL/PathnameValidator'
+import {TypeCheck} from '@flexio-oss/flex-types'
+import {assertType, TypeCheck as PrimitiveTypeCheck} from '@flexio-oss/assert'
 
+
+const START_RE = '^/?'
 const PARAMETER_RE = '[^/]+'
 const PARAMETER_TEMPLATE_RE_IN = '\{'
 const PARAMETER_TEMPLATE_RE_OUT = '\}'
@@ -12,47 +17,61 @@ const PARAMETER_TEMPLATE_RE = PARAMETER_TEMPLATE_RE_IN + '(' + PARAMETER_RE + ')
  */
 const __memoizeRegexp = new Map()
 
+
 export class UrlTemplateRegexp {
-  /**
-   * @param {string} urlTemplate
-   * @return {RegExp}
-   */
-  static regexpFromUrlTemplate(urlTemplate) {
-    return new this().__templateToRegexp(urlTemplate)
-  }
 
   /**
    *
-   * @param {string} urlTemplate
-   * @param {Object} routeParameter
-   * @return {PathName}
-   * @constructor
+   * @param {RouteCompiled} routeCompiled
+   * @param {ObjectValue} routeParameter
+   * @return {Pathname}
    * @static
    */
-  static PathnameFromUrlTemplate(urlTemplate, routeParameter) {
-    return new this().__templateToPathname(urlTemplate, routeParameter)
+  static pathnameFromUrlTemplate(routeCompiled, routeParameter) {
+    return new this().__templateToPathname(routeCompiled, routeParameter)
+  }
+
+  /**
+   * @param {string} urlTemplate
+   * @return {FlexRegExp}
+   */
+  static flexRegexpFromUrlTemplate(urlTemplate) {
+    return new this().__templateToRegexp(urlTemplate)
+
   }
 
   /**
    *
    * @param {string} urlTemplate
-   * @return {RegExp}
+   * @return {FlexRegExp}
    * @private
    */
   __templateToRegexp(urlTemplate) {
-    var matches
+
     const re = this.__getCompiledRegexp(PARAMETER_TEMPLATE_RE)
-    var stringRe = urlTemplate
+    let matches
+    let stringRe = urlTemplate
+    let namedGroups = new globalFlexioImport.io.flexio.flex_types.arrays.StringArray()
+
     do {
       matches = re.exec(urlTemplate)
+
       if (matches) {
+
         stringRe = stringRe.replace(
           this.__getCompiledRegexp(this.__searchTemplateParam(matches[1])),
-          this.__namedGroup(matches[1])
+          this.__group()
         )
+        namedGroups.push(matches[1])
       }
+
     } while (matches)
-    return new RegExp(this.__addBeginRegexp(this.__addTraillingSlashesRegex(stringRe)))
+
+    return new globalFlexioImport.io.flexio.extended_flex_types.FlexRegExpBuilder()
+      .value(new RegExp(this.__addBeginRegexp(this.__addTraillingSlashesRegex(stringRe))))
+      .namedGroups(namedGroups)
+      .build()
+
   }
 
   /**
@@ -63,16 +82,20 @@ export class UrlTemplateRegexp {
    * @private
    */
   __getCompiledRegexp(stringRegexp, resetIndex = true) {
+
     if (!__memoizeRegexp.has(stringRegexp)) {
       __memoizeRegexp.set(
         stringRegexp,
         new RegExp(stringRegexp, 'gi')
       )
     }
+
     const re = __memoizeRegexp.get(stringRegexp)
+
     if (resetIndex === true) {
       re.lastIndex = 0
     }
+
     return re
   }
 
@@ -98,12 +121,21 @@ export class UrlTemplateRegexp {
 
   /**
    *
+   * @return {string}
+   * @private
+   */
+  __group() {
+    return '(' + PARAMETER_RE + ')'
+  }
+
+  /**
+   *
    * @param {string} stringRe
    * @return {string}
    * @private
    */
   __addBeginRegexp(stringRe) {
-    return '^' + stringRe
+    return START_RE + stringRe
   }
 
   /**
@@ -118,34 +150,40 @@ export class UrlTemplateRegexp {
 
   /**
    *
-   * @param {string} urlTemplate
-   * @param {Object} routeParameter
-   * @return {PathName}
+   * @param {RouteCompiled} routeCompiled
+   * @param {ObjectValue} routeParameter
+   * @return {Pathname}
    */
-  __templateToPathname(urlTemplate, routeParameter) {
-    var matches
-    const re = this.__getCompiledRegexp(PARAMETER_TEMPLATE_RE)
-    var pathname = urlTemplate
-    do {
-      matches = re.exec(urlTemplate)
-      if (matches) {
-        pathname = pathname.replace(
-          this.__getCompiledRegexp(this.__searchTemplateParam(matches[1])),
-          this.__getValueByKey(matches[1], routeParameter)
-        )
-      }
-    } while (matches)
-    return new PathName(pathname)
+  __templateToPathname(routeCompiled, routeParameter) {
+    assertType(routeCompiled instanceof globalFlexioImport.io.flexio.js_router.types.RouteCompiled, 'should be a RouteCompiled')
+    TypeCheck.assertIsObjectValue(routeParameter)
+
+    let pathname = routeCompiled.urlTemplate()
+
+    for (const param of routeCompiled.regexp().namedGroups()) {
+      pathname = pathname.replace(
+        this.__getCompiledRegexp(this.__searchTemplateParam(param)),
+        this.__getValueByKey(param, routeParameter)
+      )
+    }
+
+    const pathnameInst = new globalFlexioImport.io.flexio.js_router.types
+      .PathnameBuilder()
+      .value(pathname)
+      .build()
+
+    new PathnameValidator().isValid(pathnameInst)
+    return pathnameInst
   }
 
   /**
    *
    * @param {string} key
-   * @param {Object<string,*>} obj
+   * @param {ObjectValue} obj
    * @return {string}
    * @private
    */
   __getValueByKey(key, obj) {
-    return obj[key].toString()
+    return obj.stringValue(key)
   }
 }
